@@ -5,7 +5,7 @@ import { QueryResult, useLazyQuery } from '@apollo/client';
 import { AnimeForUserQuery, Exact } from '@/app/gql/graphql';
 import convertAnilistEntry from '@/app/mapper/AnimeEntryMapper';
 import AnimeGrid from '@/app/components/AnimeGrid';
-import { useState } from 'react';
+import {useEffect, useState} from 'react';
 import SpinningWheel from "@/app/components/SpinningWheel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 
@@ -41,6 +41,14 @@ export default function AnimeList() {
     const [fetchAnime] = useLazyQuery(animesForUser);
 
     const [selectedAnimeIds, setSelectedAnimeIds] = useState<number[]>([]);
+
+    useEffect(() => {
+        // Load stored data from localStorage on component mount
+        const storedUsernames = JSON.parse(localStorage.getItem('usernames') || '[]');
+        const storedSelectedAnimes = JSON.parse(localStorage.getItem('selectedAnimeIds') || '[]');
+        if (storedUsernames.length > 0) setUsernames(storedUsernames);
+        if (storedSelectedAnimes.length > 0) setSelectedAnimeIds(storedSelectedAnimes);
+    }, []);
 
     const handleSelect = (id: number) => {
         setSelectedAnimeIds((prevSelected) =>
@@ -104,6 +112,12 @@ export default function AnimeList() {
     };
 
     const selectedAnimes = animes.filter(anime => selectedAnimeIds.includes(anime.id)); // Filter anime based on selected IDs
+
+    useEffect(() => {
+        // Save usernames and selected anime ids to localStorage
+        localStorage.setItem('usernames', JSON.stringify(usernames));
+        localStorage.setItem('selectedAnimeIds', JSON.stringify(selectedAnimeIds));
+    }, [usernames, selectedAnimeIds]);
 
     return (
         <div className="flex flex-col gap-6">
