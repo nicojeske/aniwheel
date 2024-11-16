@@ -176,7 +176,12 @@ export default function AnimeList() {
             {/* Fetch Button */}
             <button
                 onClick={fetchAnimesForUsers}
-                className="p-2 bg-green-600 text-white rounded-lg hover:bg-green-500"
+                className={
+                    classNames(
+                        "p-2 bg-green-600 text-white rounded-lg hover:bg-green-500",
+                        {'cursor-not-allowed opacity-50': loading || !usernames.some((u) => u.trim())}
+                    )
+                }
                 disabled={loading || !usernames.some((u) => u.trim())}
             >
                 {loading ? 'Loading...' : 'Fetch Common Anime'}
