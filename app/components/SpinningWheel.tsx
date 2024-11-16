@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
-import Image from "next/image";
+import React, {useState, useRef, useEffect} from 'react';
+import AnimeCard from "@/app/components/AnimeCard";
+import AnimeEntryModel from "@/app/models/AnimeEntry";
 
 type SpinningWheelProps = {
     animes: AnimeEntryModel[];
@@ -13,6 +14,7 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
     const [selectedAnime, setSelectedAnime] = useState(null);
     const wheelRef = useRef(null);
     const clickSoundRef = useRef(null);
+    const famfareSoundRef = useRef(null);
 
     // Variables for animation
     const animationRef = useRef(null);
@@ -35,6 +37,21 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
 
     useEffect(() => {
         onSelection(selectedAnime);
+
+        if (selectedAnime) {
+            // Play fanfare sound
+            if (famfareSoundRef.current) {
+                famfareSoundRef.current.currentTime = 0;
+                famfareSoundRef.current.play();
+            }
+        } else {
+            // Reset fanfare sound
+            if (famfareSoundRef.current) {
+                famfareSoundRef.current.pause();
+                famfareSoundRef.current.currentTime = 0;
+            }
+        }
+
     }, [selectedAnime])
 
     const spinWheel = () => {
@@ -99,7 +116,10 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
             currentRotationRef.current = rotation % 360;
 
             // Determine selected anime - same selector logic
-            const adjustedRotation = (360 - (normalizedRotation + arrowOffset)) % 360;
+            // const adjustedRotation = (360 - (normalizedRotation + arrowOffset)) % 360;
+            // Calculate adjusted rotation to ensure it is non-negative
+            const adjustedRotation = ((360 - (normalizedRotation + arrowOffset)) + 360) % 360;
+
             const segmentAngle = 360 / animes.length;
             const selectedIndex = Math.floor(adjustedRotation / segmentAngle) % animes.length;
             const selected = animes[selectedIndex];
@@ -120,6 +140,10 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
         // Initialize click sound
         clickSoundRef.current = new Audio('/click.mp3');
         clickSoundRef.current.volume = 0.5; // Adjust volume as needed
+
+        // Initialize fanfare sound
+        famfareSoundRef.current = new Audio('/fanfare.mp3');
+        famfareSoundRef.current.volume = 0.1; // Adjust volume as needed
     }, []);
 
     return (
