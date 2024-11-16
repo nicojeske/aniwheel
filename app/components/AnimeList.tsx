@@ -203,8 +203,9 @@ export default function AnimeList() {
                     <div>Loading...</div>
                 ) : animes.length > 0 ? (
                     <>
-                        <h2 className="text-2xl font-semibold">Common Anime ({animes.length})</h2>
-                        <AnimeGrid animes={animes} selectedAnimeIds={selectedAnimeIds} onSelect={handleSelect} />
+                        <h2 className="text-2xl font-semibold">Common Anime ({animes.length})
+                            Selected: {selectedAnimes.length}</h2>
+                        <AnimeGrid animes={animes} selectedAnimeIds={selectedAnimeIds} onSelect={handleSelect}/>
                     </>
                 ) : (
                     <div>No common anime found.</div>
