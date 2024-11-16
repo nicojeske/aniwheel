@@ -1,8 +1,8 @@
 'use client';
 
-import { graphql } from '../gql';
-import { QueryResult, useLazyQuery } from '@apollo/client';
-import { AnimeForUserQuery, Exact } from '@/app/gql/graphql';
+import {graphql} from '../gql';
+import {QueryResult, useLazyQuery} from '@apollo/client';
+import {AnimeForUserQuery, Exact, MediaListStatus} from '@/app/gql/graphql';
 import convertAnilistEntry from '@/app/mapper/AnimeEntryMapper';
 import AnimeGrid from '@/app/components/AnimeGrid';
 import {useEffect, useState} from 'react';
@@ -10,8 +10,8 @@ import SpinningWheel from "@/app/components/SpinningWheel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 
 const animesForUser = graphql(`
-    query animeForUser($userName: String) {
-        MediaListCollection(userName: $userName, type: ANIME, status: CURRENT) {
+    query animeForUser($userName: String, $status: MediaListStatus) {
+        MediaListCollection(userName: $userName, type: ANIME, status: $status) {
             hasNextChunk
             lists {
                 entries {
@@ -37,7 +37,7 @@ export default function AnimeList() {
     const [animes, setAnimes] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
     const [showWheel, setShowWheel] = useState(false);
-
+    const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
     const [fetchAnime] = useLazyQuery(animesForUser);
 
     const [selectedAnimeIds, setSelectedAnimeIds] = useState<number[]>([]);
@@ -76,8 +76,10 @@ export default function AnimeList() {
 
             for (const username of usernames) {
                 if (username.trim()) {
-                    const { data }: QueryResult<AnimeForUserQuery, Exact<{ userName?: string | null }>> = await fetchAnime({
-                        variables: { userName: username.trim() },
+                    const {data}: QueryResult<AnimeForUserQuery, Exact<{
+                        userName?: string | null
+                    }>> = await fetchAnime({
+                        variables: {userName: username.trim(), status: selectedWatchState},
                     });
 
                     if (data?.MediaListCollection?.lists?.[0]?.entries) {
@@ -149,6 +151,23 @@ export default function AnimeList() {
                 >
                     Add Username
                 </button>
+            </div>
+
+            {/* MediaListStatus Dropdown */}
+            <div className="flex flex-col gap-4">
+                <label htmlFor="mediaListStatus" className="text-white">Select Watch State:</label>
+                <select
+                    id="mediaListStatus"
+                    value={selectedWatchState}
+                    onChange={(e) => setSelectedWatchState(e.target.value as MediaListStatus)}
+                    className="p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
+                >
+                    {Object.values(MediaListStatus).map((status) => (
+                        <option key={status} value={status}>
+                            {status}
+                        </option>
+                    ))}
+                </select>
             </div>
 
             {/* Fetch Button */}
