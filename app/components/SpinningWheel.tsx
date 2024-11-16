@@ -123,7 +123,7 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
     }, []);
 
     return (
-        <div className="relative flex flex-col items-center text-white">
+        <div className="relative flex flex-row items-center text-white gap-10">
             {/* Wheel Container */}
             <div className="relative">
                 {/* Wheel */}
@@ -228,31 +228,57 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
                 </div>
             </div>
 
-            {/* Spin Button */}
-            <button
-                onClick={spinWheel}
-                className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 disabled:opacity-50"
-                disabled={isSpinning}
-            >
-                {isSpinning ? 'Dreht...' : 'Drehen'}
-            </button>
+            <div>
+                {/* Display Selected Anime */}
 
-            {/* Display Selected Anime */}
-            {selectedAnime && (
                 <div className="mt-4 text-center">
                     <h3 className="text-lg font-semibold">Das heilige Rad sagt:</h3>
-                    <Image src={selectedAnime.coverImageUrl} width={300} height={300} />
-                    <p>{selectedAnime.title}</p>
+                    {selectedAnime ? (
+                        <AnimeCard coverImageUrl={selectedAnime.coverImageUrl} selected={true}
+                                   title={selectedAnime.title} id={selectedAnime.id} onSelect={(_) => {
+                        }}></AnimeCard>
+                    ) : (
+                        <AnimeCard coverImageUrl={"/cover.webp"} selected={true}
+                                   title={"???"} id={0} onSelect={(_) => {
+                        }}></AnimeCard>
+                    )}
                 </div>
-            )}
 
-            {/* Close Button */}
-            <button
-                onClick={onClose}
-                className="mt-4 px-4 py-2 bg-gray-600 rounded-lg hover:bg-gray-500"
-            >
-                Schließen
-            </button>
+
+                <div
+                    className="flex items-center justify-center flex-row mt-4 gap-4"
+                >
+                    {/* Spin Button */}
+                    <button
+                        onClick={spinWheel}
+                        className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 disabled:opacity-50 w-3/4"
+                        disabled={isSpinning}
+                    >
+                        {isSpinning ? 'Dreht...' : 'Drehen'}
+                    </button>
+
+                    {/* Close Button */}
+                    <button
+                        onClick={onClose}
+                        className="mt-4 px-4 py-2 bg-gray-600 rounded-lg hover:bg-gray-500 w-1/4 flex items-center justify-center"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth="2"
+                            stroke="currentColor"
+                            className="w-6 h-6"
+                        >
+                            <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18L18 6M6 6l12 12"
+                            />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
