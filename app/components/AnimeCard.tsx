@@ -46,6 +46,7 @@ const AnimeCard: React.FC<AnimeEntryModel> = ({
                 width={460}
                 height={658}
                 className="w-full object-cover rounded-lg mb-4"
+                priority={true}
             />
             {/* Title */}
             <h3 className="text-center text-lg font-semibold text-gray-200">
