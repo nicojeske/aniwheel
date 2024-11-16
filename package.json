@@ -15,7 +15,9 @@
     "howler": "^2.2.4",
     "next": "15.0.3",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-confetti-boom": "^1.0.0",
+    "react-dom": "^18.3.1",
+    "sharp": "^0.33.5"
   },
   "devDependencies": {
     "@0no-co/graphqlsp": "^1.12.16",

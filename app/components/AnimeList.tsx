@@ -7,6 +7,8 @@ import convertAnilistEntry from '@/app/mapper/AnimeEntryMapper';
 import AnimeGrid from '@/app/components/AnimeGrid';
 import {useEffect, useState} from 'react';
 import SpinningWheel from "@/app/components/SpinningWheel";
+import classNames from "classnames";
+import Confetti from "react-confetti-boom";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 
 const animesForUser = graphql(`
@@ -39,6 +41,7 @@ export default function AnimeList() {
     const [showWheel, setShowWheel] = useState(false);
     const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
     const [fetchAnime] = useLazyQuery(animesForUser);
+    const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
     const [selectedAnimeIds, setSelectedAnimeIds] = useState<number[]>([]);
 
@@ -205,9 +208,20 @@ export default function AnimeList() {
 
             {/* Spinning Wheel Modal */}
             {showWheel && (
-                <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
+                <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center z-50">
+                    <div className="z-50 h-full">
+                        {drawnAnime && (
+                            <Confetti
+                                mode="fall"
+                                particleCount={500}
+                                effectCount={100}
+                                effectInterval={1000}
+                                shapeSize={20}
+                            />)}
+                    </div>
                     <div className="bg-gray-900 p-4 rounded-lg">
-                        <SpinningWheel animes={selectedAnimes} onClose={() => setShowWheel(false)} />
+                        <SpinningWheel animes={selectedAnimes} onClose={() => setShowWheel(false)}
+                                       onSelection={(x) => setDrawnAnime(x)} size={800}/>
                     </div>
                 </div>
             )}

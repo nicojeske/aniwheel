@@ -1,7 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
 import Image from "next/image";
 
-export default function SpinningWheel({ animes, onClose, size = 550 }) {
+type SpinningWheelProps = {
+    animes: AnimeEntryModel[];
+    onClose: () => void;
+    size?: number;
+    onSelection?: (anime: AnimeEntryModel | null) => void;
+}
+
+export default function SpinningWheel({animes, onClose, size = 400, onSelection = (_ => {})}: SpinningWheelProps) {
     const [isSpinning, setIsSpinning] = useState(false);
     const [selectedAnime, setSelectedAnime] = useState(null);
     const wheelRef = useRef(null);
@@ -17,7 +24,6 @@ export default function SpinningWheel({ animes, onClose, size = 550 }) {
 
     // Set radius based on the size prop
     const radius = size / 2;
-    const pinAngles = animes.map((_, index) => (index * 360) / animes.length);
 
     // Function to play click sound
     const playClickSound = () => {
@@ -26,6 +32,10 @@ export default function SpinningWheel({ animes, onClose, size = 550 }) {
             clickSoundRef.current.play();
         }
     };
+
+    useEffect(() => {
+        onSelection(selectedAnime);
+    }, [selectedAnime])
 
     const spinWheel = () => {
         if (isSpinning) return;
