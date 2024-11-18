@@ -182,7 +182,7 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
                             // Calculate text position
                             const midAngle = startAngle + segmentAngle / 2;
                             const midAngleRad = (Math.PI * midAngle) / 180;
-                            const textRadius = radius * 0.65;
+                            const textRadius = radius * 0.5;
                             const textX = radius + textRadius * Math.cos(midAngleRad);
                             const textY = radius + textRadius * Math.sin(midAngleRad);
 
