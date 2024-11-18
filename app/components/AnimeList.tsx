@@ -202,8 +202,6 @@ export default function AnimeList() {
                             <Confetti
                                 mode="fall"
                                 particleCount={500}
-                                effectCount={100}
-                                effectInterval={1000}
                                 shapeSize={20}
                             />)}
                     </div>
