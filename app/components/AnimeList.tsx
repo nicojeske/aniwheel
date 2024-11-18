@@ -9,6 +9,7 @@ import SpinningWheel from "@/app/components/SpinningWheel";
 import classNames from "classnames";
 import Confetti from "react-confetti-boom";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
+import useSize from "@/app/hooks/useSize";
 import {animesForUser} from "@/app/queries/anilistQueries";
 
 export default function AnimeList() {
@@ -19,6 +20,7 @@ export default function AnimeList() {
     const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
     const [fetchAnime] = useLazyQuery(animesForUser);
     const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
+    const windowSize = useSize();
 
     const [selectedAnimeIds, setSelectedAnimeIds] = useState<number[]>([]);
 
@@ -100,6 +102,9 @@ export default function AnimeList() {
         localStorage.setItem('usernames', JSON.stringify(usernames));
         localStorage.setItem('selectedAnimeIds', JSON.stringify(selectedAnimeIds));
     }, [usernames, selectedAnimeIds]);
+
+    // const spinWheelSize = 0.5 * windowSize.width;
+    const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
 
     return (
         <div className="flex flex-col gap-6">
@@ -204,7 +209,7 @@ export default function AnimeList() {
                     </div>
                     <div className="bg-gray-900 p-4 rounded-lg">
                         <SpinningWheel animes={selectedAnimes} onClose={() => setShowWheel(false)}
-                                       onSelection={(x) => setDrawnAnime(x)} size={800}/>
+                                       onSelection={(x) => setDrawnAnime(x)} size={spinWheelSize}/>
                     </div>
                 </div>
             )}
