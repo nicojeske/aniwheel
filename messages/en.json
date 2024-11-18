@@ -9,6 +9,7 @@
     "remove_username_button": "Remove",
     "select_watchstate_button": "Selected watch status",
     "fetch_button": "Fetch animes...",
+    "fetch_button_disabled": "Please add a user",
     "watch_state": {
       "COMPLETED": "Completed",
       "CURRENT": "Current",
@@ -29,6 +30,7 @@
     "undecided_title": "Spin the wheel!",
     "decided_title": "The wheel has decided!",
     "spin_button": "Spin",
-    "spinning": "Spinning..."
+    "spinning": "Spinning...",
+    "opening_theme": "Opening: {name}"
   }
 }

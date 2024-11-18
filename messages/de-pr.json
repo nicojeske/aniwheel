@@ -30,6 +30,7 @@
     "undecided_title": "Drehe am heiligen Rad!",
     "decided_title": "Das heilige Rad hat entschieden!",
     "spin_button": "Drehen",
-    "spinning": "Drehe..."
+    "spinning": "Drehe...",
+    "opening_theme": "Opening: {name}"
   }
 }

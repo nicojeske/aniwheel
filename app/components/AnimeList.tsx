@@ -14,6 +14,8 @@ import {useLocalStorage, useWindowSize} from "usehooks-ts";
 import MediaListStatusSelector from "@/app/components/MediaListStatusSelector";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import CustomButton from "@/app/components/CustomButton";
+import {useQuery} from "@tanstack/react-query";
+import {getOpeningThemeForAnime} from "@/app/services/animethemesApi";
 
 export default function AnimeList() {
     const t = useTranslations('Selections');
@@ -35,6 +37,12 @@ export default function AnimeList() {
     const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
     const [fetchAnime] = useLazyQuery(animesForUser);
+    const {data} = useQuery({
+        queryKey: ['openingTheme', drawnAnime?.id],
+        queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
+        enabled: !!drawnAnime && configuration.enableOpenings
+        }
+    )
 
     const fetchAnimesForUsers = async () => {
         setLoading(true);
@@ -116,6 +124,7 @@ export default function AnimeList() {
                         onSelection={(anime) => setDrawnAnime(anime)}
                         spinWheelSize={spinWheelSize}
                         showConfetti={!!drawnAnime && configuration.enableConfetti}
+                        openingTheme={data}
                     />
                 )
             }

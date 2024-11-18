@@ -7,9 +7,9 @@ export default getRequestConfig(async () => {
     let locale = 'en';
 
     const headerList = await headers();
-    const siteUrl = headerList.get("x-current-url");
+    const siteUrl = headerList.get("x-forwarded-host");
 
-    const customSiteUrl = process.env.FUN_SITE_URL;
+    const customSiteUrl = process.env.NEXT_PUBLIC_CUSTOM_SITE_URL;
 
     if (siteUrl && customSiteUrl && (siteUrl.includes(customSiteUrl))) {
         locale = "de-pr";
