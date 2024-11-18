@@ -22,11 +22,11 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                 placeholder={t('filter_placeholder')}
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
-                className="mb-4 p-2 rounded-md bg-gray-800 text-white"
+                className="mb-4 p-2 rounded-md bg-gray-800 text-white w-full"
             />
 
             {/* Anime Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg w-full">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
                 {filteredAnimes.map((anime) => (
                     <AnimeCard
                         key={anime.id}
