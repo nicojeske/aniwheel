@@ -75,6 +75,23 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
         animationRef.current = requestAnimationFrame(animateWheel);
     };
 
+    const wrapText = (text, maxChars) => {
+        const words = text.split(' ');
+        const lines = [];
+        let currentLine = words[0];
+
+        for (let i = 1; i < words.length; i++) {
+            if ((currentLine + ' ' + words[i]).length <= maxChars) {
+                currentLine += ' ' + words[i];
+            } else {
+                lines.push(currentLine);
+                currentLine = words[i];
+            }
+        }
+        lines.push(currentLine);
+        return lines;
+    };
+
     const animateWheel = (timestamp) => {
         if (!startTimeRef.current) startTimeRef.current = timestamp;
         const elapsed = timestamp - startTimeRef.current;
@@ -198,24 +215,27 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
                                         stroke="#ffffff"
                                         strokeWidth="1"
                                     />
-                                    {/* Anime Title */}
+                                    {/* Anime Title with Word Wrapping */}
                                     <text
                                         x={textX}
                                         y={textY}
                                         fill="#000000"
-                                        fontSize={size * 0.03} // Make font size a fraction of wheel size
+                                        fontSize={size * 0.03}
                                         fontWeight="bold"
-                                        textAnchor="middle"
                                         alignmentBaseline="middle"
+                                        textAnchor="middle"
                                         transform={`rotate(${midAngle} ${textX} ${textY})`}
                                     >
-                                        <tspan
-                                            x={textX}
-                                            y={textY}
-                                            transform={`rotate(${-midAngle} ${textX} ${textY})`}
-                                        >
-                                            {anime.title}
-                                        </tspan>
+                                        {wrapText(anime.title, 25).map((line, i) => (
+                                            <tspan
+                                                key={i}
+                                                x={textX}
+                                                dy={i === 0 ? 0 : size * 0.03} // Adjust line spacing
+                                                transform={`rotate(${-midAngle} ${textX} ${textY})`}
+                                            >
+                                                {line}
+                                            </tspan>
+                                        ))}
                                     </text>
                                 </g>
                             );
