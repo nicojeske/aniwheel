@@ -1,6 +1,5 @@
 'use client';
 
-import {graphql} from '../gql';
 import {QueryResult, useLazyQuery} from '@apollo/client';
 import {AnimeForUserQuery, Exact, MediaListStatus} from '@/app/gql/graphql';
 import convertAnilistEntry from '@/app/mapper/AnimeEntryMapper';
@@ -10,29 +9,7 @@ import SpinningWheel from "@/app/components/SpinningWheel";
 import classNames from "classnames";
 import Confetti from "react-confetti-boom";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
-
-const animesForUser = graphql(`
-    query animeForUser($userName: String, $status: MediaListStatus) {
-        MediaListCollection(userName: $userName, type: ANIME, status: $status) {
-            hasNextChunk
-            lists {
-                entries {
-                    mediaId
-                    media {
-                        coverImage {
-                            large
-                        }
-                        title {
-                            english
-                            romaji
-                        }
-                        id
-                    }
-                }
-            }
-        }
-    }
-`);
+import {animesForUser} from "@/app/queries/anilistQueries";
 
 export default function AnimeList() {
     const [usernames, setUsernames] = useState<string[]>(['']); // Start with one input
