@@ -1,6 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import AnimeCard from "@/app/components/AnimeCard";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
+import {useTranslations} from "next-intl";
 
 type SpinningWheelProps = {
     animes: AnimeEntryModel[];
@@ -10,6 +11,8 @@ type SpinningWheelProps = {
 }
 
 export default function SpinningWheel({animes, onClose, size = 400, onSelection = (_ => {})}: SpinningWheelProps) {
+    const t = useTranslations('Spinner')
+
     const [isSpinning, setIsSpinning] = useState(false);
     const [selectedAnime, setSelectedAnime] = useState(null);
     const wheelRef = useRef(null);
@@ -256,7 +259,9 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
                 {/* Display Selected Anime */}
 
                 <div className="mt-4 text-center">
-                    <h3 className="text-lg font-semibold">Das heilige Rad sagt:</h3>
+                    <h3 className="text-lg font-semibold">
+                        {selectedAnime ? t('decided_title') : t('undecided_title')}
+                    </h3>
                     {selectedAnime ? (
                         <AnimeCard coverImageUrl={selectedAnime.coverImageUrl} selected={true}
                                    title={selectedAnime.title} id={selectedAnime.id} onSelect={(_) => {
@@ -278,7 +283,7 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
                         className="mt-4 px-4 py-2 bg-blue-600 rounded-lg hover:bg-blue-500 disabled:opacity-50 w-3/4"
                         disabled={isSpinning}
                     >
-                        {isSpinning ? 'Dreht...' : 'Drehen'}
+                        {isSpinning ? t('spinning') : t('spin_button')}
                     </button>
 
                     {/* Close Button */}

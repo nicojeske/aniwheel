@@ -1,0 +1,34 @@
+{
+  "Home": {
+    "title": "Wilkommen zum",
+    "title_highlight": "Heiligen Rad"
+  },
+  "Selections": {
+    "add_username_button": "Benutzer hinzufügen",
+    "add_username_placeholder": "Anilist Username...",
+    "remove_username_button": "Entfernen",
+    "select_watchstate_button": "Gewählter Status",
+    "fetch_button": "Animes abrufen...",
+    "watch_state": {
+      "COMPLETED": "Abgeschlossen",
+      "CURRENT": "Aktuell",
+      "DROPPED": "Abgebrochen",
+      "PAUSED": "Pausiert",
+      "PLANNING": "Geplant",
+      "REPEATING": "Wiederholend"
+    },
+    "loading": "Laden...",
+    "show_wheel_button": "Drehe am heiligen Rad",
+    "no_common": "Es wurden keine gemeinsamen Animes gefunden",
+    "list_title": "Gemeinsame Animes {sameCount}. Ausgewählt: {selectedCount}"
+  },
+  "AnimeGrid": {
+    "filter_placeholder": "Filter nach Titel..."
+  },
+  "Spinner": {
+    "undecided_title": "Drehe am heiligen Rad!",
+    "decided_title": "Das heilige Rad hat entschieden!",
+    "spin_button": "Drehen",
+    "spinning": "Drehe..."
+  }
+}

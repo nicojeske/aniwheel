@@ -1,0 +1,34 @@
+{
+  "Home": {
+    "title": "Welcome to the",
+    "title_highlight": "Anilist Decision Wheel"
+  },
+  "Selections": {
+    "add_username_button": "Add user",
+    "add_username_placeholder": "Anilist username...",
+    "remove_username_button": "Remove",
+    "select_watchstate_button": "Selected watch status",
+    "fetch_button": "Fetch animes...",
+    "watch_state": {
+      "COMPLETED": "Completed",
+      "CURRENT": "Current",
+      "DROPPED": "Dropped",
+      "PAUSED": "Paused",
+      "PLANNING": "Planning",
+      "REPEATING": "Repeating"
+    },
+    "loading": "Loading...",
+    "show_wheel_button": "Open the wheel",
+    "no_common": "No common animes found",
+    "list_title": "Common animes {sameCount}. Selected: {selectedCount}"
+  },
+  "AnimeGrid": {
+    "filter_placeholder": "Filter by title..."
+  },
+  "Spinner": {
+    "undecided_title": "Spin the wheel!",
+    "decided_title": "The wheel has decided!",
+    "spin_button": "Spin",
+    "spinning": "Spinning..."
+  }
+}

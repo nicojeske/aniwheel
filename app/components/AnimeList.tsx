@@ -11,9 +11,11 @@ import Confetti from "react-confetti-boom";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import useSize from "@/app/hooks/useSize";
 import {animesForUser} from "@/app/queries/anilistQueries";
-import {convertMediaStatusToString} from "@/app/mapper/WatchStatusMapper";
+import {useTranslations} from "next-intl";
 
 export default function AnimeList() {
+    const t = useTranslations('Selections');
+
     const [usernames, setUsernames] = useState<string[]>(['']); // Start with one input
     const [animes, setAnimes] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);
@@ -119,14 +121,14 @@ export default function AnimeList() {
                             value={username}
                             onChange={(e) => handleInputChange(index, e.target.value)}
                             className="p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-                            placeholder="Enter username"
+                            placeholder={t('add_username_placeholder')}
                         />
                         {usernames.length > 1 && (
                             <button
                                 onClick={() => handleRemoveUsername(index)}
                                 className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
                             >
-                                Remove
+                                {t('remove_username_button')}
                             </button>
                         )}
                     </div>
@@ -135,13 +137,13 @@ export default function AnimeList() {
                     onClick={handleAddUsername}
                     className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
                 >
-                    Add Username
+                    {t('add_username_button')}
                 </button>
             </div>
 
             {/* MediaListStatus Dropdown */}
             <div className="flex flex-col gap-4">
-                <label htmlFor="mediaListStatus" className="text-white">Select Watch State:</label>
+                <label htmlFor="mediaListStatus" className="text-white">{t('select_watchstate_button')}</label>
                 <select
                     id="mediaListStatus"
                     value={selectedWatchState}
@@ -150,7 +152,9 @@ export default function AnimeList() {
                 >
                     {Object.values(MediaListStatus).map((status) => (
                         <option key={status} value={status}>
-                            {convertMediaStatusToString(status)}
+                            {/*{convertMediaStatusToString(status)}*/}
+                            {/*@ts-expect-error Gets its name from the enum*/}
+                            {t(`watch_state.${status.toString()}`)}
                         </option>
                     ))}
                 </select>
@@ -167,7 +171,7 @@ export default function AnimeList() {
                 }
                 disabled={loading || !usernames.some((u) => u.trim())}
             >
-                {loading ? 'Loading...' : 'Fetch Common Anime'}
+                {loading ? t('loading') : t('fetch_button')}
             </button>
 
             {/* Button to show the spinning wheel */}
@@ -176,22 +180,26 @@ export default function AnimeList() {
                     onClick={() => setShowWheel(true)}
                     className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500"
                 >
-                    Drehe am heiligen Rad
+                    {t('show_wheel_button')}
                 </button>
             )}
 
             {/* Anime Grid */}
             <div className="mt-8">
                 {loading ? (
-                    <div>Loading...</div>
+                    <div>{t('loading')}</div>
                 ) : animes.length > 0 ? (
                     <>
-                        <h2 className="text-2xl font-semibold">Common Anime ({animes.length})
-                            Selected: {selectedAnimes.length}</h2>
+                        <h2 className="text-2xl font-semibold">
+                            {t('list_title', {
+                            sameCount: animes.length,
+                            selectedCount: selectedAnimes.length
+                        })}
+                        </h2>
                         <AnimeGrid models={animes} selectedIds={selectedAnimeIds} onSelect={handleSelect}/>
                     </>
                 ) : (
-                    <div>No common anime found.</div>
+                    <div>{t('no_common')}</div>
                 )}
             </div>
 

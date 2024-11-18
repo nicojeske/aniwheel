@@ -2,9 +2,11 @@ import React, { useState } from "react";
 import AnimeCard from "./AnimeCard";
 import {MultipleSelectionModel} from "@/app/models/generic/MultipleSelectionModel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
+import {useTranslations} from "next-intl";
 
 const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, selectedIds, onSelect}) => {
-    // State to manage the filter
+    const t = useTranslations('AnimeGrid');
+
     const [filterText, setFilterText] = useState<string>("");
 
     // Filter the animes based on the filterText
@@ -17,7 +19,7 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
             {/* Filter Input */}
             <input
                 type="text"
-                placeholder="Filter by title..."
+                placeholder={t('filter_placeholder')}
                 value={filterText}
                 onChange={(e) => setFilterText(e.target.value)}
                 className="mb-4 p-2 rounded-md bg-gray-800 text-white"
