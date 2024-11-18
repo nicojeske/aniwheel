@@ -1,27 +1,28 @@
-import {useEffect, useState} from "react";
+import { useEffect, useState } from 'react';
 
-const useSize = () => {
-    const [windowSize, setWindowSize] = useState({
-        width: window.innerWidth,
-        height: window.innerHeight,
+type WindowDimentions = {
+    width: number | undefined;
+    height: number | undefined;
+};
+
+const useSize = (): WindowDimentions => {
+    const [windowDimensions, setWindowDimensions] = useState<WindowDimentions>({
+        width: undefined,
+        height: undefined,
     });
-
     useEffect(() => {
-        const windowResizeHandler = () => {
-            setWindowSize({
+        function handleResize(): void {
+            setWindowDimensions({
                 width: window.innerWidth,
                 height: window.innerHeight,
             });
-        };
+        }
+        handleResize();
+        window.addEventListener('resize', handleResize);
+        return (): void => window.removeEventListener('resize', handleResize);
+    }, []); // Empty array ensures that effect is only run on mount
 
-        window.addEventListener("resize", windowResizeHandler);
-
-        return () => {
-            window.removeEventListener("resize", windowResizeHandler);
-        };
-    }, []);
-
-    return windowSize;
-}
+    return windowDimensions;
+};
 
 export default useSize;
