@@ -12,6 +12,7 @@ import AnimeEntryModel from "@/app/models/AnimeEntry";
 import useSize from "@/app/hooks/useSize";
 import {animesForUser} from "@/app/queries/anilistQueries";
 import {useTranslations} from "next-intl";
+import configuration from "@/configuration";
 
 export default function AnimeList() {
     const t = useTranslations('Selections');
@@ -207,7 +208,7 @@ export default function AnimeList() {
             {showWheel && (
                 <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center z-50">
                     <div className="z-50 h-full">
-                        {drawnAnime && (
+                        {drawnAnime && configuration.enableConfetti && (
                             <Confetti
                                 mode="fall"
                                 particleCount={500}

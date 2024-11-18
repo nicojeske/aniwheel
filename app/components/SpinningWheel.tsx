@@ -2,6 +2,7 @@ import React, {useState, useRef, useEffect} from 'react';
 import AnimeCard from "@/app/components/AnimeCard";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import {useTranslations} from "next-intl";
+import configuration from "@/configuration";
 
 type SpinningWheelProps = {
     animes: AnimeEntryModel[];
@@ -32,7 +33,7 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
 
     // Function to play click sound
     const playClickSound = () => {
-        if (clickSoundRef.current) {
+        if (clickSoundRef.current && configuration.playClicks) {
             clickSoundRef.current.currentTime = 0;
             clickSoundRef.current.play();
         }
@@ -43,13 +44,13 @@ export default function SpinningWheel({animes, onClose, size = 400, onSelection 
 
         if (selectedAnime) {
             // Play fanfare sound
-            if (famfareSoundRef.current) {
+            if (famfareSoundRef.current && configuration.playFanfare) {
                 famfareSoundRef.current.currentTime = 0;
                 famfareSoundRef.current.play();
             }
         } else {
             // Reset fanfare sound
-            if (famfareSoundRef.current) {
+            if (famfareSoundRef.current && configuration.playFanfare) {
                 famfareSoundRef.current.pause();
                 famfareSoundRef.current.currentTime = 0;
             }
