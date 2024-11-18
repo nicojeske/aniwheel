@@ -1,16 +1,10 @@
 import React from "react";
 import classNames from "classnames";
 import Image from "next/image";
+import {SelectableModel} from "@/app/models/generic/SelectableModel";
+import AnimeEntryModel from "@/app/models/AnimeEntry";
 
-type AnimeEntryModel = {
-    id: number;
-    title: string;
-    coverImageUrl: string;
-    selected: boolean;
-    onSelect: (id: number) => void;
-};
-
-const AnimeCard: React.FC<AnimeEntryModel> = ({
+const AnimeCard: React.FC<SelectableModel<AnimeEntryModel>> = ({
                                                   id,
                                                   title,
                                                   coverImageUrl,

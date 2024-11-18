@@ -1,19 +1,14 @@
 import React, { useState } from "react";
 import AnimeCard from "./AnimeCard";
+import {MultipleSelectionModel} from "@/app/models/generic/MultipleSelectionModel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 
-type AnimeGridProps = {
-    animes: AnimeEntryModel[];
-    selectedAnimeIds: number[]; // Accept selectedAnimeIds prop
-    onSelect: (id: number) => void; // Accept onSelect handler prop
-};
-
-const AnimeGrid: React.FC<AnimeGridProps> = ({ animes, selectedAnimeIds, onSelect }) => {
+const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, selectedIds, onSelect}) => {
     // State to manage the filter
     const [filterText, setFilterText] = useState<string>("");
 
     // Filter the animes based on the filterText
-    const filteredAnimes = animes.filter((anime) =>
+    const filteredAnimes = models.filter((anime) =>
         anime.title.toLowerCase().includes(filterText.toLowerCase())
     );
 
@@ -36,7 +31,7 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({ animes, selectedAnimeIds, onSelec
                         id={anime.id}
                         title={anime.title}
                         coverImageUrl={anime.coverImageUrl}
-                        selected={selectedAnimeIds.includes(anime.id)} // Check if the anime is selected
+                        selected={selectedIds.includes(anime.id)} // Check if the anime is selected
                         onSelect={onSelect} // Allow selecting/deselecting
                     />
                 ))}

@@ -187,7 +187,7 @@ export default function AnimeList() {
                     <>
                         <h2 className="text-2xl font-semibold">Common Anime ({animes.length})
                             Selected: {selectedAnimes.length}</h2>
-                        <AnimeGrid animes={animes} selectedAnimeIds={selectedAnimeIds} onSelect={handleSelect}/>
+                        <AnimeGrid models={animes} selectedIds={selectedAnimeIds} onSelect={handleSelect}/>
                     </>
                 ) : (
                     <div>No common anime found.</div>
