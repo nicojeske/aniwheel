@@ -11,6 +11,7 @@ import Confetti from "react-confetti-boom";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import useSize from "@/app/hooks/useSize";
 import {animesForUser} from "@/app/queries/anilistQueries";
+import {convertMediaStatusToString} from "@/app/mapper/WatchStatusMapper";
 
 export default function AnimeList() {
     const [usernames, setUsernames] = useState<string[]>(['']); // Start with one input
@@ -149,7 +150,7 @@ export default function AnimeList() {
                 >
                     {Object.values(MediaListStatus).map((status) => (
                         <option key={status} value={status}>
-                            {status}
+                            {convertMediaStatusToString(status)}
                         </option>
                     ))}
                 </select>
