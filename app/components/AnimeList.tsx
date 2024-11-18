@@ -1,205 +1,106 @@
-'use client';
+'use client'
 
-import {QueryResult, useLazyQuery} from '@apollo/client';
-import {AnimeForUserQuery, Exact, MediaListStatus} from '@/app/gql/graphql';
-import convertAnilistEntry from '@/app/mapper/AnimeEntryMapper';
+import React, {useEffect, useState} from 'react';
+import {useLazyQuery} from '@apollo/client';
+import {MediaListStatus} from '@/app/gql/graphql';
 import AnimeGrid from '@/app/components/AnimeGrid';
-import {useEffect, useState} from 'react';
-import SpinningWheel from "@/app/components/SpinningWheel";
-import classNames from "classnames";
-import Confetti from "react-confetti-boom";
+import UsernameInputs from '@/app/components/UsernameInputs';
+import {animesForUser} from '@/app/queries/anilistQueries';
+import {useTranslations} from 'next-intl';
+import configuration from '@/configuration';
+import {getCommonAnimesForUsers} from "@/app/services/commonAnimeFinder";
+import SpinningWheelModal from "@/app/components/SpinningWheelModal";
+import {useLocalStorage, useWindowSize} from "usehooks-ts";
+import MediaListStatusSelector from "@/app/components/MediaListStatusSelector";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
-import useSize from "@/app/hooks/useSize";
-import {animesForUser} from "@/app/queries/anilistQueries";
-import {useTranslations} from "next-intl";
-import configuration from "@/configuration";
+import CustomButton from "@/app/components/CustomButton";
 
 export default function AnimeList() {
     const t = useTranslations('Selections');
 
-    const [usernames, setUsernames] = useState<string[]>(['']); // Start with one input
-    const [animes, setAnimes] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
-    const [showWheel, setShowWheel] = useState(false);
-    const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
-    const [fetchAnime] = useLazyQuery(animesForUser);
-    const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
-    const windowSize = useSize();
-
-    const [selectedAnimeIds, setSelectedAnimeIds] = useState<number[]>([]);
+    const windowSize = useWindowSize();
+    const [isClient, setIsClient] = useState(false);
 
     useEffect(() => {
-        // Load stored data from localStorage on component mount
-        const storedUsernames = JSON.parse(localStorage.getItem('usernames') || '[]');
-        const storedSelectedAnimes = JSON.parse(localStorage.getItem('selectedAnimeIds') || '[]');
-        if (storedUsernames.length > 0) setUsernames(storedUsernames);
-        if (storedSelectedAnimes.length > 0) setSelectedAnimeIds(storedSelectedAnimes);
+        setIsClient(true);
     }, []);
 
-    const handleSelect = (id: number) => {
-        setSelectedAnimeIds((prevSelected) =>
-            prevSelected.includes(id)
-                ? prevSelected.filter((animeId) => animeId !== id) // Deselect
-                : [...prevSelected, id] // Select
-        );
-    };
+    const [usernames, setUsernames] = useLocalStorage<string[]>('usernames', [''], {initializeWithValue: true});
+    const [selectedAnimeIds, setSelectedAnimeIds] = useLocalStorage<number[]>('selectedAnimeIds', [], {initializeWithValue: true});
 
-    const handleAddUsername = () => setUsernames([...usernames, '']);
-    const handleRemoveUsername = (index: number) =>
-        setUsernames(usernames.filter((_, i) => i !== index));
+    const [animes, setAnimes] = useState<AnimeEntryModel[]>([]);
+    const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
+    const [loading, setLoading] = useState(false);
+    const [showWheel, setShowWheel] = useState(false);
+    const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
-    const handleInputChange = (index: number, value: string) => {
-        const updatedUsernames = [...usernames];
-        updatedUsernames[index] = value;
-        setUsernames(updatedUsernames);
-    };
+    const [fetchAnime] = useLazyQuery(animesForUser);
 
     const fetchAnimesForUsers = async () => {
         setLoading(true);
         try {
-            const userAnimeLists: Set<number>[] = [];
-            const animeDetailsMap = new Map<number, any>(); // Map to store anime details by ID
-
-            for (const username of usernames) {
-                if (username.trim()) {
-                    const {data}: QueryResult<AnimeForUserQuery, Exact<{
-                        userName?: string | null
-                    }>> = await fetchAnime({
-                        variables: {userName: username.trim(), status: selectedWatchState},
-                    });
-
-                    if (data?.MediaListCollection?.lists?.[0]?.entries) {
-                        const animeIds = new Set(
-                            data.MediaListCollection.lists[0].entries.map((entry) => {
-                                const animeId = entry?.media?.id;
-                                if (animeId) {
-                                    animeDetailsMap.set(animeId, convertAnilistEntry(entry?.media)); // Store details
-                                }
-                                return animeId;
-                            })
-                        );
-                        userAnimeLists.push(animeIds);
-                    }
-                }
-            }
-
-            // Find the intersection of anime IDs
-            const commonAnimeIds = userAnimeLists.reduce((acc, set) =>
-                acc ? new Set([...acc].filter((id) => set.has(id))) : set
-            );
-
-            // Extract anime details for the common IDs
-            const commonAnimes = [...commonAnimeIds].map((id) => animeDetailsMap.get(id));
-
+            const commonAnimes = await getCommonAnimesForUsers(usernames, selectedWatchState, fetchAnime);
             setAnimes(commonAnimes);
         } catch (error) {
-            console.error(error);
+            console.error('Error fetching animes', error);
         } finally {
             setLoading(false);
         }
     };
 
-    const selectedAnimes = animes.filter(anime => selectedAnimeIds.includes(anime.id)); // Filter anime based on selected IDs
+    const handleSelectAnime = (id: number) => {
+        setSelectedAnimeIds((prev: number[]) =>
+            prev.includes(id) ? prev.filter(animeId => animeId !== id) : [...prev, id]
+        );
+    };
 
-    useEffect(() => {
-        // Save usernames and selected anime ids to localStorage
-        localStorage.setItem('usernames', JSON.stringify(usernames));
-        localStorage.setItem('selectedAnimeIds', JSON.stringify(selectedAnimeIds));
-    }, [usernames, selectedAnimeIds]);
-
-    // const spinWheelSize = 0.5 * windowSize.width;
     const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
+    const selectedAnimes = animes.filter(anime => selectedAnimeIds.includes(anime.id));
 
     return (
         <div className="flex flex-col gap-6 w-full">
+            {/* Username Inputs */}
+            <UsernameInputs
+                usernames={usernames}
+                setUsernames={setUsernames}
+            />
 
-            {/* Usernames Input Section */}
-            <div className="flex flex-col gap-4">
-                {usernames.map((username, index) => (
-                    <div key={index} className="flex items-center gap-2 w-full">
-                        {usernames.length > 1 && (
-                            <button
-                                onClick={() => handleRemoveUsername(index)}
-                                className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
-                            >
-                                {t('remove_username_button')}
-                            </button>
-                        )}
-                        <input
-                            type="text"
-                            value={username}
-                            onChange={(e) => handleInputChange(index, e.target.value)}
-                            className="p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500 w-full"
-                            placeholder={t('add_username_placeholder')}
-                        />
-                    </div>
-                ))}
-                {usernames.length < 5 && (
-                    <button
-                        onClick={handleAddUsername}
-                        className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
-                    >
-                        {t('add_username_button')}
-                    </button>
-                )}
-            </div>
-
-            {/* MediaListStatus Dropdown */}
-            <div className="flex flex-col gap-4">
-                <label htmlFor="mediaListStatus" className="text-white">{t('select_watchstate_button')}</label>
-                <select
-                    id="mediaListStatus"
-                    value={selectedWatchState}
-                    onChange={(e) => setSelectedWatchState(e.target.value as MediaListStatus)}
-                    className="p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500"
-                >
-                    {Object.values(MediaListStatus).map((status) => (
-                        <option key={status} value={status}>
-                            {/*{convertMediaStatusToString(status)}*/}
-                            {/*@ts-expect-error Gets its name from the enum*/}
-                            {t(`watch_state.${status.toString()}`)}
-                        </option>
-                    ))}
-                </select>
-            </div>
+            {/* MediaListStatus Selector */}
+            <MediaListStatusSelector
+                selectedWatchState={selectedWatchState}
+                setSelectedWatchState={setSelectedWatchState}
+            />
 
             {/* Fetch Button */}
-            <button
+            <CustomButton
+                disabled={loading || (isClient && !usernames.some(u => u.trim()))}
                 onClick={fetchAnimesForUsers}
-                className={
-                    classNames(
-                        "p-2 bg-green-600 text-white rounded-lg hover:bg-green-500",
-                        {'cursor-not-allowed opacity-50': loading || !usernames.some((u) => u.trim())}
-                    )
-                }
-                disabled={loading || !usernames.some((u) => u.trim())}
-            >
-                {loading ? t('loading') : t('fetch_button')}
-            </button>
+                color={'secondary'}
+                text={t('fetch_button')}
+                disabledText={t('fetch_button_disabled')}
+                loading={loading}
+            />
 
-            {/* Button to show the spinning wheel */}
+            {/* Show Wheel Button */}
             {animes.length > 0 && (
-                <button
+                <CustomButton
                     onClick={() => setShowWheel(true)}
-                    className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-500"
-                >
-                    {t('show_wheel_button')}
-                </button>
+                    text={t('show_wheel_button')}
+                    color={'tertiary'}
+                    disabled={selectedAnimeIds.length < 2}/>
             )}
 
-            {/* Anime Grid */}
+            {/* Anime Grid */
+            }
             <div className="mt-8">
                 {loading ? (
                     <div>{t('loading')}</div>
                 ) : animes.length > 0 ? (
                     <>
                         <h2 className="text-2xl font-semibold">
-                            {t('list_title', {
-                            sameCount: animes.length,
-                            selectedCount: selectedAnimes.length
-                        })}
+                            {t('list_title', {sameCount: animes.length, selectedCount: selectedAnimeIds.length})}
                         </h2>
-                        <AnimeGrid models={animes} selectedIds={selectedAnimeIds} onSelect={handleSelect}/>
+                        <AnimeGrid models={animes} selectedIds={selectedAnimeIds} onSelect={handleSelectAnime}/>
                     </>
                 ) : (
                     <div>{t('no_common')}</div>
@@ -207,22 +108,17 @@ export default function AnimeList() {
             </div>
 
             {/* Spinning Wheel Modal */}
-            {showWheel && (
-                <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center z-50">
-                    <div className="z-50 h-full">
-                        {drawnAnime && configuration.enableConfetti && (
-                            <Confetti
-                                mode="fall"
-                                particleCount={500}
-                                shapeSize={20}
-                            />)}
-                    </div>
-                    <div className="bg-gray-900 p-4 rounded-lg">
-                        <SpinningWheel animes={selectedAnimes} onClose={() => setShowWheel(false)}
-                                       onSelection={(x) => setDrawnAnime(x)} size={spinWheelSize}/>
-                    </div>
-                </div>
-            )}
+            {
+                showWheel && selectedAnimes.length > 2 && (
+                    <SpinningWheelModal
+                        selectedAnimes={selectedAnimes}
+                        onClose={() => setShowWheel(false)}
+                        onSelection={(anime) => setDrawnAnime(anime)}
+                        spinWheelSize={spinWheelSize}
+                        showConfetti={!!drawnAnime && configuration.enableConfetti}
+                    />
+                )
+            }
         </div>
     );
 }

@@ -15,10 +15,8 @@ const nextConfig: NextConfig = {
         ]
     },
     eslint: {
-        ignoreDuringBuilds: true // FIXME: Remove this line
     },
     typescript: {
-        ignoreBuildErrors: true // FIXME: Remove this line
     },
     output: "standalone"
 };

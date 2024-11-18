@@ -4,13 +4,18 @@ import Image from "next/image";
 import {SelectableModel} from "@/app/models/generic/SelectableModel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 
-const AnimeCard: React.FC<SelectableModel<AnimeEntryModel>> = ({
-                                                  id,
-                                                  title,
-                                                  coverImageUrl,
-                                                  selected,
-                                                  onSelect,
-                                              }) => {
+type AnimeCardProps = SelectableModel<AnimeEntryModel> & {
+    showSelectionIndicator?: boolean;
+}
+const AnimeCard: React.FC<AnimeCardProps> = (
+    {
+        id,
+        title,
+        coverImageUrl,
+        selected,
+        onSelect,
+        showSelectionIndicator = true
+    }) => {
     return (
         <div
             className={classNames(
@@ -20,19 +25,22 @@ const AnimeCard: React.FC<SelectableModel<AnimeEntryModel>> = ({
                     : "bg-gray-800/40 opacity-50 hover:opacity-75"
             )}
             onClick={() => onSelect(id)}
-            style={{ maxWidth: "300px"}} // Limit the card's size
+            style={{maxWidth: "300px"}} // Limit the card's size
         >
             {/* Selection Indicator */}
-            <div className="absolute top-2 left-2">
-                <div
-                    className={classNames(
-                        "w-5 h-5 rounded-full border-2",
-                        selected
-                            ? "bg-blue-500 border-blue-500"
-                            : "bg-gray-700 border-gray-500"
-                    )}
-                ></div>
-            </div>
+            {showSelectionIndicator && (
+                <div className="absolute top-2 left-2">
+                    <div
+                        className={classNames(
+                            "w-5 h-5 rounded-full border-2",
+                            selected
+                                ? "bg-blue-500 border-blue-500"
+                                : "bg-gray-700 border-gray-500"
+                        )}
+                    ></div>
+                </div>
+            )}
+
             {/* Cover Image */}
             <Image
                 src={coverImageUrl}

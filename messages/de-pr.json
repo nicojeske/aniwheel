@@ -9,6 +9,7 @@
     "remove_username_button": "Entfernen",
     "select_watchstate_button": "Gewählter Status",
     "fetch_button": "Animes abrufen...",
+    "fetch_button_disabled": "Bitte füge einen Benutzer hinzu",
     "watch_state": {
       "COMPLETED": "Abgeschlossen",
       "CURRENT": "Aktuell",
