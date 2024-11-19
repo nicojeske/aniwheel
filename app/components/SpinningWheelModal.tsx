@@ -7,6 +7,7 @@ import AnimeCard from "@/app/components/AnimeCard";
 import {useTranslations} from "next-intl";
 import useWheelAnimation from "@/app/hooks/useWheelAnimation";
 import {OpeningWithName} from "@/app/services/animethemesApi";
+import AudioPlayer from "@/app/components/AudioPlayer";
 
 interface SpinningWheelModalProps {
     selectedAnimes: AnimeEntryModel[];
@@ -28,13 +29,6 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
 
     const t = useTranslations('Spinner');
     const wheelRef = useRef<SVGSVGElement>(null);
-    const openingThemeAudioRef = useRef<HTMLAudioElement>(null);
-
-    useEffect(() => {
-        if (openingThemeAudioRef.current) {
-            openingThemeAudioRef.current.volume = configuration.openingsDefaultVolume;
-        }
-    }, [openingTheme]);
 
     const {isSpinning, selectedAnime, spinWheel} = useWheelAnimation({
         animes: selectedAnimes,
@@ -78,9 +72,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                             />
                             {openingTheme && (
                                 <div>
-                                    <audio controls autoPlay ref={openingThemeAudioRef} className="mt-4 w-full"
-                                           src={openingTheme.openingUrl}/>
-                                    <p className="mt-4 text-base text-left">{t('opening_theme', {name: openingTheme.name})}</p>
+                                    <AudioPlayer src={openingTheme.openingUrl} title={openingTheme.name} autoplay/>
                                 </div>
                             )}
                         </div>
