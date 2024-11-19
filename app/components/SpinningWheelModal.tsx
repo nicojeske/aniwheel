@@ -62,7 +62,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                 {selectedAnime ? t('decided_title') : t('undecided_title')}
                             </h3>
                             <AnimeCard
-                                coverImageUrl={selectedAnime ? selectedAnime.coverImageUrl : '/cover.webp'}
+                                coverImageUrl={selectedAnime ? selectedAnime.coverImageUrl : '/cover.jpeg'}
                                 selected={true}
                                 title={selectedAnime ? selectedAnime.title : '???'}
                                 id={selectedAnime ? selectedAnime.id : 0}
@@ -71,7 +71,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                 showSelectionIndicator={false}
                             />
                             {openingTheme && (
-                                <div>
+                                <div className={"pt-2"}>
                                     <AudioPlayer src={openingTheme.openingUrl} title={openingTheme.name} autoplay/>
                                 </div>
                             )}
