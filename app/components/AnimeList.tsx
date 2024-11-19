@@ -153,7 +153,7 @@ export default function AnimeList() {
             setLastUsernameKey(usernamesKey);
             fetchAnimes(fetchAnimeWithCache, userSelection.userNames, userSelection.watchState).catch(console.error);
         }
-    }, [userSelection.userNames, userSelection.watchState, userSelectionsByUsernames]);
+    }, [userSelection.userNames, userSelection.watchState]);
 
     useEffect(() => {
         const anyEmpty = (x: string) => x.trim() === '';
@@ -169,6 +169,18 @@ export default function AnimeList() {
             createLocalStorageEntry(userSelection.userNames);
         }
     }, [animes]);
+
+    useEffect(() => {
+        const localUserselection = userSelectionsByUsernames[getUsernamesKey(userSelection.userNames)];
+        const storageUserSelection = userSelectionsByUsernames[getUsernamesKey(userSelection.userNames)];
+
+       if (localUserselection && storageUserSelection) {
+           setUserSelection(prevSelections => ({
+               ...prevSelections,
+               selections: storageUserSelection.selections,
+           }));
+        }
+    }, [userSelectionsByUsernames]);
 
     const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
     const selectedAnimes = animes.filter(anime => userSelection.selections[userSelection.watchState]?.includes(anime.id));
