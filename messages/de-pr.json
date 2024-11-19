@@ -1,7 +1,8 @@
 {
   "Home": {
     "title": "Wilkommen zum",
-    "title_highlight": "Heiligen Rad"
+    "title_highlight": "Heiligen Rad",
+    "subtitle": "A simple tool to help you decide what anime to watch next"
   },
   "Selections": {
     "add_username_button": "Benutzer hinzufügen",

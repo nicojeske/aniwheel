@@ -1,7 +1,8 @@
 {
   "Home": {
     "title": "Welcome to the",
-    "title_highlight": "Anilist Decision Wheel"
+    "title_highlight": "Aniwheel",
+    "subtitle": "A simple tool to help you decide what anime to watch next"
   },
   "Selections": {
     "add_username_button": "Add user",
