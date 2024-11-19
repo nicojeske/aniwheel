@@ -50,7 +50,7 @@ export default function AnimeList() {
     const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
     const [fetchAnime] = useLazyQuery(animesForUser);
-    const {data: openingThemeData} = useQuery({
+    const {data} = useQuery({
         queryKey: ['openingTheme', drawnAnime?.id],
         queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
         enabled: !!drawnAnime && configuration.enableOpenings,
