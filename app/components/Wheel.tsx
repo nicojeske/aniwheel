@@ -106,8 +106,8 @@ export const Wheel: React.FC<WheelProps> = ({
 
                 {/* Fixed Indicator Arrow */}
                 <div className="absolute top-0 left-1/2 transform -translate-x-1/2">
-                    <svg width={size * 0.1} height={size * 0.1} viewBox="0 0 100 100">
-                        <polygon points="50,0 90,80 10,80" fill="#ff0000" stroke="#ffffff" strokeWidth="2"/>
+                    <svg width={size * 0.1} height={size * 0.1} viewBox="0 0 20 100">
+                        <polygon points="0,0 20,0 10,80" fill="#991b1b" stroke="#000" strokeWidth={2}/>
                     </svg>
                 </div>
             </div>
