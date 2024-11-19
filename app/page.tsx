@@ -10,7 +10,7 @@ export default function Home() {
                 <h1 className="text-4xl font-bold text-center sm:text-left">
                     {t('title')} <span className="text-blue-500">{t('title_highlight')}</span>
                 </h1>
-                <h4 className="text-lg text-center sm:text-left text-gray-800">{t('subtitle')}</h4>
+                <h4 className="text-lg text-center sm:text-left text-gray-400">{t('subtitle')}</h4>
                 <AnimeList />
             </main>
         </div>
