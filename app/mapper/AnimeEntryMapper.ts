@@ -5,7 +5,7 @@ function convertAnilistEntry (entry: Media): AnimeEntryModel {
     return {
         id: entry.id,
         title: entry.title?.english ?? entry.title?.romaji ?? "",
-        coverImageUrl: entry.coverImage?.large ?? ""
+        coverImageUrl: entry.coverImage?.extraLarge ?? ""
     }
 }
 

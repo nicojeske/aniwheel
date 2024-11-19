@@ -27,7 +27,7 @@ async function fetchAnimeForUser(
                             romaji: entry.media.title?.romaji,
                         },
                         coverImage: {
-                            large: entry.media.coverImage?.large,
+                            extraLarge: entry.media.coverImage?.extraLarge,
                         },
                         isFavourite: false,
                         isFavouriteBlocked: false
