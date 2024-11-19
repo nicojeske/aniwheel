@@ -16,6 +16,7 @@ import AnimeEntryModel from "@/app/models/AnimeEntry";
 import CustomButton from "@/app/components/CustomButton";
 import {useQuery} from "@tanstack/react-query";
 import {getOpeningThemeForAnime} from "@/app/services/animethemesApi";
+import Script from "next/script";
 
 export default function AnimeList() {
     const t = useTranslations('Selections');
@@ -38,9 +39,9 @@ export default function AnimeList() {
 
     const [fetchAnime] = useLazyQuery(animesForUser);
     const {data} = useQuery({
-        queryKey: ['openingTheme', drawnAnime?.id],
-        queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
-        enabled: !!drawnAnime && configuration.enableOpenings
+            queryKey: ['openingTheme', drawnAnime?.id],
+            queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
+            enabled: !!drawnAnime && configuration.enableOpenings
         }
     )
 
@@ -67,6 +68,24 @@ export default function AnimeList() {
 
     return (
         <div className="flex flex-col gap-6 w-full">
+            <Script src={'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'} onReady={() => {
+                // @ts-expect-error - Ko-fiWidgetOverlay is not defined
+                kofiWidgetOverlay.draw('nicojeske', {
+                    'type': 'floating-chat',
+                    'floating-chat.donateButton.text': 'Support me',
+                    'floating-chat.donateButton.background-color': '#00b9fe',
+                    'floating-chat.donateButton.text-color': '#fff'
+                });
+            }}/>
+            <style>
+                {`
+                    .floatingchat-container-wrap { left: unset; right: 50px; width: 50%; }
+                    .floatingchat-container-wrap-mobi { left: unset; right: 50px; width: 50%;}
+                    .floating-chat-kofi-popup-iframe { left: unset; right: 50px; }
+                    .floating-chat-kofi-popup-iframe-mobi { left: unset; right: 50px; }
+                    .floating-chat-kofi-popup-iframe-closer-mobi { left: unset; right: 50px; }
+                `}
+            </style>
             {/* Username Inputs */}
             <UsernameInputs
                 usernames={usernames}

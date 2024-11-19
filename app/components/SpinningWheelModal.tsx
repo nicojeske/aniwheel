@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useRef} from 'react';
 import Confetti from 'react-confetti-boom';
 import configuration from '@/configuration';
 import AnimeEntryModel from '@/app/models/AnimeEntry';
