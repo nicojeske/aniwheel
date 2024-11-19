@@ -56,7 +56,7 @@ RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
 
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/start.sh ./
+COPY --from=builder /app/docker-entrypoint.sh ./
 COPY --from=builder /app/scripts ./scripts
 
 
@@ -78,4 +78,5 @@ ENV PORT=3000
 # server.js is created by next build from the standalone output
 # https://nextjs.org/docs/pages/api-reference/next-config-js/output
 ENV HOSTNAME="0.0.0.0"
-CMD ["bash", "start.sh"]
+ENTRYPOINT ["docker-entrypoint.sh"]
+CMD ["node", "server.js"]

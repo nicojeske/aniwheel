@@ -27,7 +27,6 @@ ALL_VARS=("${MANDATORY_VARS[@]}" "${OPTIONAL_VARS[@]}")
 find /app/public /app/.next -type f -name "*.js" |
 while read file; do
   for VAR in "${ALL_VARS[@]}"; do
-    echo "Processing $VAR with value: ${!VAR}"
     if [ ! -z "${!VAR}" ]; then
         sed -i "s|BAKED_$VAR|${!VAR}|g" "$file"
     fi
