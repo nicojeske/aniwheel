@@ -4,7 +4,7 @@ import {useTranslations} from "next-intl";
 
 interface MediaListStatusDropdownProps {
     selectedWatchState: MediaListStatus;
-    setSelectedWatchState: React.Dispatch<React.SetStateAction<MediaListStatus>>;
+    setSelectedWatchState: (watchState: MediaListStatus) => void;
 }
 
 const MediaListStatusDropdown: React.FC<MediaListStatusDropdownProps> = ({

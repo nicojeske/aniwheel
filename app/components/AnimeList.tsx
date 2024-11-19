@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, {useEffect, useState} from 'react';
 import {useLazyQuery} from '@apollo/client';
@@ -8,63 +8,158 @@ import UsernameInputs from '@/app/components/UsernameInputs';
 import {animesForUser} from '@/app/queries/anilistQueries';
 import {useTranslations} from 'next-intl';
 import configuration from '@/configuration';
-import {getCommonAnimesForUsers} from "@/app/services/commonAnimeFinder";
-import SpinningWheelModal from "@/app/components/SpinningWheelModal";
-import {useLocalStorage, useWindowSize} from "usehooks-ts";
-import MediaListStatusSelector from "@/app/components/MediaListStatusSelector";
-import AnimeEntryModel from "@/app/models/AnimeEntry";
-import CustomButton from "@/app/components/CustomButton";
-import {useQuery} from "@tanstack/react-query";
-import {getOpeningThemeForAnime} from "@/app/services/animethemesApi";
+import {getCommonAnimesForUsers} from '@/app/services/commonAnimeFinder';
+import SpinningWheelModal from '@/app/components/SpinningWheelModal';
+import {useLocalStorage, useWindowSize} from 'usehooks-ts';
+import MediaListStatusSelector from '@/app/components/MediaListStatusSelector';
+import AnimeEntryModel from '@/app/models/AnimeEntry';
+import CustomButton from '@/app/components/CustomButton';
+import {useQuery} from '@tanstack/react-query';
+import {getOpeningThemeForAnime} from '@/app/services/animethemesApi';
+import {createEmptySelections, defaultUserSelection, UserSelection} from '@/app/models/UserSelection';
 import Script from "next/script";
 
 export default function AnimeList() {
     const t = useTranslations('Selections');
-
     const windowSize = useWindowSize();
+
     const [isClient, setIsClient] = useState(false);
 
+    const [userSelectionsByUsernames, setUserSelectionsByUsernames] = useLocalStorage<{ [key: string]: UserSelection }>(
+        'userSelectionsByUsernames',
+        {},
+        {initializeWithValue: true}
+    );
+    const [lastUsernameKey, setLastUsernameKey] = useLocalStorage<string>('lastUsernameKey', '', {initializeWithValue: true});
+
     useEffect(() => {
-        setIsClient(true);
+        setIsClient(true)
+        if (lastUsernameKey) {
+            const lastUserSelection = userSelectionsByUsernames[lastUsernameKey];
+            if (lastUserSelection) {
+                setUserSelection(lastUserSelection);
+            }
+        }
     }, []);
 
-    const [usernames, setUsernames] = useLocalStorage<string[]>('usernames', [''], {initializeWithValue: true});
-    const [selectedAnimeIds, setSelectedAnimeIds] = useLocalStorage<number[]>('selectedAnimeIds', [], {initializeWithValue: true});
 
+    const [userSelection, setUserSelection] = useState<UserSelection>(defaultUserSelection);
     const [animes, setAnimes] = useState<AnimeEntryModel[]>([]);
-    const [selectedWatchState, setSelectedWatchState] = useState<MediaListStatus>(MediaListStatus.Current);
     const [loading, setLoading] = useState(false);
     const [showWheel, setShowWheel] = useState(false);
     const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
     const [fetchAnime] = useLazyQuery(animesForUser);
-    const {data} = useQuery({
-            queryKey: ['openingTheme', drawnAnime?.id],
-            queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
-            enabled: !!drawnAnime && configuration.enableOpenings
-        }
-    )
+    const {data: openingThemeData} = useQuery({
+        queryKey: ['openingTheme', drawnAnime?.id],
+        queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
+        enabled: !!drawnAnime && configuration.enableOpenings,
+    });
 
-    const fetchAnimesForUsers = async () => {
+    const getUsernamesKey = (usernames: string[]) => {
+        return usernames
+            .map(username => username.trim().toLowerCase())
+            .filter(Boolean)
+            .sort()
+            .join(',');
+    };
+
+    const createLocalStorageEntry = (usernames: string[]) => {
+        const usernamesKey = getUsernamesKey(usernames);
+        setUserSelectionsByUsernames(prev => ({
+            ...prev,
+            [usernamesKey]: {
+                userNames: usernames,
+                watchState: MediaListStatus.Current,
+                selections: createEmptySelections(),
+            },
+        }));
+        setUserSelection(prev => ({
+            ...prev,
+            userNames: usernames,
+            watchState: MediaListStatus.Current,
+            selections: createEmptySelections(),
+        }));
+    }
+
+    const fetchAnimes: (userNames: string[], watchState: (MediaListStatus)) => Promise<AnimeEntryModel[]> = async (userNames: string[], watchState: MediaListStatus) => {
         setLoading(true);
+
         try {
-            const commonAnimes = await getCommonAnimesForUsers(usernames, selectedWatchState, fetchAnime);
+            const commonAnimes = await getCommonAnimesForUsers(userNames, watchState, fetchAnime);
             setAnimes(commonAnimes);
         } catch (error) {
-            console.error('Error fetching animes', error);
+            console.error('Error fetching animes:', error);
         } finally {
             setLoading(false);
         }
+    }
+
+    const fetchAndStoreAnimes = async () => {
+        await fetchAnimes(userSelection.userNames, userSelection.watchState);
     };
 
     const handleSelectAnime = (id: number) => {
-        setSelectedAnimeIds((prev: number[]) =>
-            prev.includes(id) ? prev.filter(animeId => animeId !== id) : [...prev, id]
-        );
+        setUserSelection(prev => {
+            const updatedSelections = {
+                ...prev.selections,
+                [prev.watchState]: prev.selections[prev.watchState].includes(id)
+                    ? prev.selections[prev.watchState].filter(animeId => animeId !== id)
+                    : [...prev.selections[prev.watchState], id],
+            };
+
+            const updatedSelection: UserSelection = {...prev, selections: updatedSelections};
+
+            const usernamesKey = getUsernamesKey(prev.userNames);
+            setUserSelectionsByUsernames(prevSelections => ({
+                ...prevSelections,
+                [usernamesKey]: updatedSelection,
+            }));
+
+            return updatedSelection;
+        });
     };
 
+    const setUsernames = (usernames: string[]) => {
+        setUserSelection(prev => ({...prev, userNames: usernames}));
+        setAnimes([]);
+    };
+
+    const setWatchState = (watchState: MediaListStatus) => {
+        const usernamesKey = getUsernamesKey(userSelection.userNames);
+        setUserSelection(prev => ({...prev, watchState}));
+        setUserSelectionsByUsernames(prevSelections => ({
+            ...prevSelections,
+            [usernamesKey]: {...prevSelections[usernamesKey], watchState},
+        }));
+        setAnimes([]);
+    };
+
+    useEffect(() => {
+        const usernamesKey = getUsernamesKey(userSelection.userNames);
+        if (userSelectionsByUsernames[usernamesKey] && userSelectionsByUsernames[usernamesKey].selections[userSelection.watchState]) {
+            setLastUsernameKey(usernamesKey);
+            fetchAnimes(userSelection.userNames, userSelection.watchState).catch(console.error);
+        }
+    }, [userSelection.userNames, userSelection.watchState, userSelectionsByUsernames]);
+
+    useEffect(() => {
+        const anyEmpty = (x: string) => x.trim() === '';
+        if (animes.length === 0 || userSelection.userNames.some(anyEmpty))
+            return;
+
+        const usernamesKey = getUsernamesKey(userSelection.userNames);
+        const existingSelection = userSelectionsByUsernames[usernamesKey];
+
+        if (existingSelection) {
+            setUserSelection(existingSelection);
+        } else if (animes.length > 0) { // Only store user selection if animes are fetched
+            createLocalStorageEntry(userSelection.userNames);
+        }
+    }, [animes]);
+
     const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
-    const selectedAnimes = animes.filter(anime => selectedAnimeIds.includes(anime.id));
+    const selectedAnimes = animes.filter(anime => userSelection.selections[userSelection.watchState]?.includes(anime.id));
 
     return (
         <div className="flex flex-col gap-6 w-full">
@@ -88,21 +183,21 @@ export default function AnimeList() {
             </style>
             {/* Username Inputs */}
             <UsernameInputs
-                usernames={usernames}
+                usernames={userSelection.userNames}
                 setUsernames={setUsernames}
             />
 
             {/* MediaListStatus Selector */}
             <MediaListStatusSelector
-                selectedWatchState={selectedWatchState}
-                setSelectedWatchState={setSelectedWatchState}
+                selectedWatchState={userSelection.watchState}
+                setSelectedWatchState={setWatchState}
             />
 
             {/* Fetch Button */}
             <CustomButton
-                disabled={loading || (isClient && !usernames.some(u => u.trim()))}
-                onClick={fetchAnimesForUsers}
-                color={'secondary'}
+                disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
+                onClick={fetchAndStoreAnimes}
+                color="secondary"
                 text={t('fetch_button')}
                 disabledText={t('fetch_button_disabled')}
                 loading={loading}
@@ -113,8 +208,9 @@ export default function AnimeList() {
                 <CustomButton
                     onClick={() => setShowWheel(true)}
                     text={t('show_wheel_button')}
-                    color={'tertiary'}
-                    disabled={selectedAnimeIds.length < 2}/>
+                    color="tertiary"
+                    disabled={selectedAnimes.length < 2}
+                />
             )}
 
             {/* Anime Grid */
@@ -125,9 +221,10 @@ export default function AnimeList() {
                 ) : animes.length > 0 ? (
                     <>
                         <h2 className="text-2xl font-semibold">
-                            {t('list_title', {sameCount: animes.length, selectedCount: selectedAnimeIds.length})}
+                            {t('list_title', {sameCount: animes.length, selectedCount: selectedAnimes.length})}
                         </h2>
-                        <AnimeGrid models={animes} selectedIds={selectedAnimeIds} onSelect={handleSelectAnime}/>
+                        <AnimeGrid models={animes} selectedIds={selectedAnimes.map(x => x.id)}
+                                   onSelect={handleSelectAnime}/>
                     </>
                 ) : (
                     <div>{t('no_common')}</div>

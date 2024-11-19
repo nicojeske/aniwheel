@@ -8,7 +8,7 @@
     "add_username_button": "Add user",
     "add_username_placeholder": "Anilist username...",
     "remove_username_button": "Remove",
-    "select_watchstate_button": "Selected watch status",
+    "select_watchstate_button": "Watch status",
     "fetch_button": "Fetch animes...",
     "fetch_button_disabled": "Please add a user",
     "watch_state": {

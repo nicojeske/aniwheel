@@ -3,7 +3,7 @@ import {useTranslations} from "next-intl";
 
 interface UsernamesInputProps {
     usernames: string[];
-    setUsernames: React.Dispatch<React.SetStateAction<string[]>>;
+    setUsernames: (usernames: string[]) => void;
     maxUsernames?: number;
 }
 
