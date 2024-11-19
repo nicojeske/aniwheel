@@ -41,7 +41,9 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
         <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center z-50">
             {/* Confetti */}
             {showConfetti && configuration.enableConfetti && (
-                <Confetti mode="fall" particleCount={500} shapeSize={20}/>
+                <div className={"z-50"}>
+                    <Confetti mode="fall" particleCount={500} shapeSize={20}/>
+                </div>
             )}
 
             {/* Modal Content */}
