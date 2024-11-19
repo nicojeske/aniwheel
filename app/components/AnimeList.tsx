@@ -1,8 +1,8 @@
 'use client';
 
 import React, {useEffect, useState} from 'react';
-import {useLazyQuery} from '@apollo/client';
-import {MediaListStatus} from '@/app/gql/graphql';
+import {QueryResult, useLazyQuery} from '@apollo/client';
+import {AnimeForUserQuery, Exact, MediaListStatus} from '@/app/gql/graphql';
 import AnimeGrid from '@/app/components/AnimeGrid';
 import UsernameInputs from '@/app/components/UsernameInputs';
 import {animesForUser} from '@/app/queries/anilistQueries';
@@ -31,6 +31,7 @@ export default function AnimeList() {
         {initializeWithValue: true}
     );
     const [lastUsernameKey, setLastUsernameKey] = useLocalStorage<string>('lastUsernameKey', '', {initializeWithValue: true});
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setIsClient(true)
@@ -49,7 +50,9 @@ export default function AnimeList() {
     const [showWheel, setShowWheel] = useState(false);
     const [drawnAnime, setDrawnAnime] = useState<AnimeEntryModel | null>(null);
 
-    const [fetchAnime] = useLazyQuery(animesForUser);
+    const [fetchAnimeWithCache] = useLazyQuery(animesForUser);
+    const [fetchAnimeNoCache] = useLazyQuery(animesForUser, {fetchPolicy: 'no-cache'});
+
     const {data} = useQuery({
         queryKey: ['openingTheme', drawnAnime?.id],
         queryFn: async () => getOpeningThemeForAnime(drawnAnime?.id as number),
@@ -82,21 +85,30 @@ export default function AnimeList() {
         }));
     }
 
-    const fetchAnimes: (userNames: string[], watchState: (MediaListStatus)) => Promise<AnimeEntryModel[]> = async (userNames: string[], watchState: MediaListStatus) => {
+    const fetchAnimes = async (
+        fetchFunction: (options: { variables: { userName: string; status: MediaListStatus } }) => Promise<QueryResult<AnimeForUserQuery, Exact<{ userName?: string | null }>>>,
+        userNames: string[],
+        watchState: MediaListStatus
+    ): Promise<AnimeEntryModel[]> => {
         setLoading(true);
 
         try {
-            const commonAnimes = await getCommonAnimesForUsers(userNames, watchState, fetchAnime);
+            const commonAnimes = await getCommonAnimesForUsers(userNames, watchState, fetchFunction);
             setAnimes(commonAnimes);
+            setError(null);
+            return commonAnimes;
         } catch (error) {
             console.error('Error fetching animes:', error);
+            setError('Animes could not be fetched. Please try again later.');
+            return [];
         } finally {
             setLoading(false);
         }
-    }
+    };
 
-    const fetchAndStoreAnimes = async () => {
-        await fetchAnimes(userSelection.userNames, userSelection.watchState);
+
+    const fetchButton = async () => {
+        await fetchAnimes(fetchAnimeNoCache, userSelection.userNames, userSelection.watchState);
     };
 
     const handleSelectAnime = (id: number) => {
@@ -139,7 +151,7 @@ export default function AnimeList() {
         const usernamesKey = getUsernamesKey(userSelection.userNames);
         if (userSelectionsByUsernames[usernamesKey] && userSelectionsByUsernames[usernamesKey].selections[userSelection.watchState]) {
             setLastUsernameKey(usernamesKey);
-            fetchAnimes(userSelection.userNames, userSelection.watchState).catch(console.error);
+            fetchAnimes(fetchAnimeWithCache, userSelection.userNames, userSelection.watchState).catch(console.error);
         }
     }, [userSelection.userNames, userSelection.watchState, userSelectionsByUsernames]);
 
@@ -180,7 +192,7 @@ export default function AnimeList() {
             {/* Fetch Button */}
             <CustomButton
                 disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
-                onClick={fetchAndStoreAnimes}
+                onClick={fetchButton}
                 color="secondary"
                 text={t('fetch_button')}
                 disabledText={t('fetch_button_disabled')}
@@ -200,6 +212,9 @@ export default function AnimeList() {
             {/* Anime Grid */
             }
             <div className="mt-8">
+                {error && <div className="text-red-500">
+                    Animes could not be fetched. Please try again later.
+                </div>}
                 {loading ? (
                     <div>{t('loading')}</div>
                 ) : animes.length > 0 ? (
