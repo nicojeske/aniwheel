@@ -117,7 +117,7 @@ export default function AnimeList() {
 
             {/* Spinning Wheel Modal */}
             {
-                showWheel && selectedAnimes.length > 2 && (
+                showWheel && selectedAnimes.length >= 2 && (
                     <SpinningWheelModal
                         selectedAnimes={selectedAnimes}
                         onClose={() => setShowWheel(false)}
