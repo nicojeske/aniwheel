@@ -196,18 +196,6 @@ export default function AnimeList() {
             `}>
                 <KofiButton/>
 
-                {showWheel && selectedAnimes.length >= 2 && (
-                    <SpinningWheelModal
-                        selectedAnimes={selectedAnimes}
-                        onClose={() => setShowWheel(false)}
-                        onSelection={(anime) => setDrawnAnime(anime)}
-                        spinWheelSize={spinWheelSize}
-                        showConfetti={!!drawnAnime && configuration.enableConfetti}
-                        openingTheme={data}
-                    />
-                )}
-
-
                 {/* Username Inputs */}
                 <UsernameInputs
                     usernames={userSelection.userNames}
