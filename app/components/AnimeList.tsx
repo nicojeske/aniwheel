@@ -188,70 +188,88 @@ export default function AnimeList() {
     const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
     const selectedAnimes = animes.filter(anime => userSelection.selections[userSelection.watchState]?.includes(anime.id));
 
-    const ConfigurationSection = () => (
-        <div className={`
-            flex flex-col gap-6 w-full
-            ${isDesktop ? 'lg:w-1/4 lg:sticky lg:top-10 lg:h-screen lg:overflow-y-auto lg:p-1' : ''}
-        `}>
-            <KofiButton/>
-            <UsernameInputs
-                usernames={userSelection.userNames}
-                setUsernames={setUsernames}
-            />
-            <MediaListStatusSelector
-                selectedWatchState={userSelection.watchState}
-                setSelectedWatchState={setWatchState}
-            />
-            <CustomButton
-                disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
-                onClick={fetchButton}
-                color="secondary"
-                text={t('fetch_button')}
-                disabledText={t('fetch_button_disabled')}
-                loading={loading}
-            />
-            {animes && animes.length > 0 && (
-                <CustomButton
-                    onClick={() => setShowWheel(true)}
-                    text={t('show_wheel_button')}
-                    color="tertiary"
-                    disabled={selectedAnimes.length < 2}
-                />
-            )}
-        </div>
-    );
-
-    const AnimeGridSection = () => (
-        <div className="mt-8 lg:mt-0 lg:w-3/4">
-            {error && <div className="text-red-500">{t('fetch_error')}</div>}
-            {loading ? (
-                <div>{t('loading')}</div>
-            ) : animes && animes.length > 0 ? (
-                <AnimeGrid
-                    models={animes}
-                    selectedIds={selectedAnimes.map(x => x.id)}
-                    onSelect={handleSelectAnime}
-                />
-            ) : (
-                <div>{t('no_common')}</div>
-            )}
-        </div>
-    );
-
     return (
         <div className={`flex ${isDesktop ? 'flex-row' : 'flex-col'} gap-6 w-full`}>
-            <ConfigurationSection/>
-            <AnimeGridSection/>
-            {showWheel && selectedAnimes.length >= 2 && (
-                <SpinningWheelModal
-                    selectedAnimes={selectedAnimes}
-                    onClose={() => setShowWheel(false)}
-                    onSelection={(anime) => setDrawnAnime(anime)}
-                    spinWheelSize={spinWheelSize}
-                    showConfetti={!!drawnAnime && configuration.enableConfetti}
-                    openingTheme={data}
+            <div className={`
+            flex flex-col gap-6 w-full
+            ${isDesktop ? 'lg:w-1/4 lg:sticky lg:top-10 lg:h-screen lg:overflow-y-auto lg:p-1' : ''}
+            `}>
+                <KofiButton/>
+
+                {showWheel && selectedAnimes.length >= 2 && (
+                    <SpinningWheelModal
+                        selectedAnimes={selectedAnimes}
+                        onClose={() => setShowWheel(false)}
+                        onSelection={(anime) => setDrawnAnime(anime)}
+                        spinWheelSize={spinWheelSize}
+                        showConfetti={!!drawnAnime && configuration.enableConfetti}
+                        openingTheme={data}
+                    />
+                )}
+
+
+                {/* Username Inputs */}
+                <UsernameInputs
+                    usernames={userSelection.userNames}
+                    setUsernames={setUsernames}
                 />
-            )}
+
+                {/* MediaListStatus Selector */}
+                <MediaListStatusSelector
+                    selectedWatchState={userSelection.watchState}
+                    setSelectedWatchState={setWatchState}
+                />
+
+                {/* Fetch Button */}
+                <CustomButton
+                    disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
+                    onClick={fetchButton}
+                    color="secondary"
+                    text={t('fetch_button')}
+                    disabledText={t('fetch_button_disabled')}
+                    loading={loading}
+                />
+
+                {/* Show Wheel Button */}
+                {animes && animes.length > 0 && (
+                    <CustomButton
+                        onClick={() => setShowWheel(true)}
+                        text={t('show_wheel_button')}
+                        color="tertiary"
+                        disabled={selectedAnimes.length < 2}
+                    />
+                )}</div>
+
+            <div className="mt-8 lg:mt-0 lg:w-3/4">
+                {/* Anime Grid */}
+                <div className="mt-8">
+                    {error && <div className="text-red-500">{t('fetch_error')}
+                </div>}
+                    {loading ? (
+                        <div>{t('loading')}</div>
+                    ) : animes.length > 0 ? (
+                        <>
+                            <AnimeGrid models={animes} selectedIds={selectedAnimes.map(x => x.id)}
+                                       onSelect={handleSelectAnime}/>
+                        </>
+                    ) : (
+                        <div>{t('no_common')}</div>
+                    )}
+                </div>
+
+                {/* Spinning Wheel Modal */}
+                {
+                    showWheel && selectedAnimes.length >= 2 && (
+                        <SpinningWheelModal
+                            selectedAnimes={selectedAnimes}
+                            onClose={() => setShowWheel(false)}
+                            onSelection={(anime) => setDrawnAnime(anime)}
+                            spinWheelSize={spinWheelSize}
+                            showConfetti={!!drawnAnime && configuration.enableConfetti}
+                            openingTheme={data}
+                        />
+                    )
+                }</div>
         </div>
     );
 }
