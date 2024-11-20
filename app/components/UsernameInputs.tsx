@@ -1,5 +1,7 @@
-import React from 'react';
-import {useTranslations} from "next-intl";
+import React, {useCallback, useMemo} from 'react';
+import {useTranslations} from 'next-intl';
+import {motion, AnimatePresence} from 'framer-motion';
+import {PlusCircleIcon, TrashIcon} from '@heroicons/react/24/outline';
 
 interface UsernamesInputProps {
     usernames: string[];
@@ -7,51 +9,82 @@ interface UsernamesInputProps {
     maxUsernames?: number;
 }
 
-const UsernamesInput: React.FC<UsernamesInputProps> = ({ usernames, setUsernames, maxUsernames = 5 }) => {
-    const t = useTranslations('Selections')
+const UsernamesInput: React.FC<UsernamesInputProps> = ({
+                                                           usernames,
+                                                           setUsernames,
+                                                           maxUsernames = 5,
+                                                       }) => {
+    const t = useTranslations('Selections');
 
-    const handleAddUsername = () => {
+    const handleAddUsername = useCallback(() => {
         if (usernames.length >= maxUsernames) return;
-
         setUsernames([...usernames, '']);
-    }
-    const handleRemoveUsername = (index: number) =>
-        setUsernames(usernames.filter((_, i) => i !== index));
+    }, [usernames.length, maxUsernames, setUsernames]);
 
-    const handleInputChange = (index: number, value: string) => {
-        const updatedUsernames = [...usernames];
-        updatedUsernames[index] = value;
-        setUsernames(updatedUsernames);
-    };
+    const handleRemoveUsername = useCallback(
+        (index: number) => {
+            setUsernames(usernames.filter((_, i) => i !== index));
+        },
+        [setUsernames, usernames]
+    );
+
+    const handleInputChange = useCallback(
+        (index: number, value: string) => {
+            const updatedUsernames = [...usernames];
+            updatedUsernames[index] = value;
+            setUsernames(updatedUsernames);
+        },
+        [setUsernames, usernames]
+    );
+
+    const canAddMore = useMemo(
+        () => usernames.length < maxUsernames,
+        [usernames.length, maxUsernames]
+    );
 
     return (
-        <div className="flex flex-col gap-4">
-            {usernames.map((username, index) => (
-                <div key={index} className="flex items-center gap-2 w-full">
-                    {usernames.length > 1 && (
-                        <button
-                            onClick={() => handleRemoveUsername(index)}
-                            className="p-2 bg-red-600 text-white rounded-lg hover:bg-red-500"
-                        >
-                            {t('remove_username_button')}
-                        </button>
-                    )}
-                    <input
-                        type="text"
-                        value={username}
-                        onChange={(e) => handleInputChange(index, e.target.value)}
-                        className="p-2 border border-gray-700 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring focus:ring-blue-500 w-full"
-                        placeholder={t('add_username_placeholder')}
-                    />
-                </div>
-            ))}
-            {usernames.length < maxUsernames && (
-                <button
+        <div className="space-y-4">
+            <AnimatePresence initial={false}>
+                {usernames.map((username, index) => (
+                    <motion.div
+                        key={index}
+                        initial={{opacity: 0, y: -20}}
+                        animate={{opacity: 1, y: 0}}
+                        exit={{opacity: 0, y: -20}}
+                        transition={{duration: 0.2}}
+                        className="flex items-center gap-2 w-full"
+                    >
+                        {usernames.length > 1 && (
+                            <motion.button
+                                whileHover={{scale: 1.05}}
+                                whileTap={{scale: 0.95}}
+                                onClick={() => handleRemoveUsername(index)}
+                                className="p-2 bg-red-600 text-white rounded-full hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200"
+                                aria-label={t('remove_username_button')}
+                            >
+                                <TrashIcon className="w-5 h-5"/>
+                            </motion.button>
+                        )}
+                        <input
+                            type="text"
+                            value={username}
+                            onChange={(e) => handleInputChange(index, e.target.value)}
+                            className="p-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all duration-200 placeholder-gray-400"
+                            placeholder={t('add_username_placeholder')}
+                        />
+                    </motion.div>
+                ))}
+            </AnimatePresence>
+            {canAddMore && (
+                <motion.button
+                    whileHover={{scale: 1.01}}
+                    whileTap={{scale: 0.99}}
                     onClick={handleAddUsername}
-                    className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500"
+                    className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200 flex items-center justify-center w-full"
                 >
+                    <PlusCircleIcon className="w-5 h-5 mr-2"/>
                     {t('add_username_button')}
-                </button>
+                </motion.button>
             )}
         </div>
     );
