@@ -81,7 +81,7 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({models, selectedIds, onSelect, whe
         if (areAllSelected) {
             clearSelection();
         } else {
-            for (const id of allIds) {
+            for (const id of allIds.filter(id => !selectedIds.includes(id))) {
                 onSelect(id);
             }
         }
