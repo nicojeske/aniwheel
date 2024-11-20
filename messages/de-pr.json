@@ -22,7 +22,8 @@
     "loading": "Laden...",
     "show_wheel_button": "Drehe am heiligen Rad",
     "no_common": "Es wurden keine gemeinsamen Animes gefunden",
-    "list_title": "Gemeinsame Animes {sameCount}. Ausgewählt: {selectedCount}"
+    "list_title": "Gemeinsame Animes {sameCount}. Ausgewählt: {selectedCount}",
+    "fetch_error": "An error occurred while fetching the animes. Please try again later."
   },
   "AnimeGrid": {
     "filter_placeholder": "Filter by title...",
@@ -51,7 +52,17 @@
     "total_animes": "Total animes: {count}",
     "selected_animes": "Selected animes: {count}",
     "clear_selection": "Clear selection",
-    "filter_reminder": "You have {count} anime(s) selected outside the current filter. Your selection will remain active while filtering."
+    "filter_reminder": "You have {count} anime(s) selected outside the current filter. Your selection will remain active while filtering.",
+    "total": "Total",
+    "filtered": "Filtered",
+    "selected": "Selected",
+    "deselect_all": "Deselect all",
+    "select_all": "Select all",
+    "selection_disclaimer": "You have selected over {limit} animes. For performance reasons the Wheel will select {limit} animes randomly from your selection.",
+    "showing_selected": "Showing selected",
+    "grid_view": "Grid view",
+    "compact_view": "Compact view",
+    "episodes": "Episodes"
   },
   "Spinner": {
     "undecided_title": "Drehe am heiligen Rad!",
