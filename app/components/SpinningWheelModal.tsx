@@ -81,7 +81,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
 
                             <motion.div
                                 layout
-                                className="w-full"
+                                className="w-1/2 md:w-3/4 lg:w-full"
                             >
                                 <AnimeCard
                                     selected={true}

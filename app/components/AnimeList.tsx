@@ -230,7 +230,7 @@ export default function AnimeList() {
 
             <div className="mt-8 lg:mt-0 lg:w-3/4">
                 {/* Anime Grid */}
-                <div className="mt-8">
+                <div className="mt-8 lg:mt-0">
                     {error && <div className="text-red-500">{t('fetch_error')}
                 </div>}
                     {loading ? (

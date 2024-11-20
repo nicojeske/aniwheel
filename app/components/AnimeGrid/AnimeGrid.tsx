@@ -173,13 +173,12 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
 
 
     return (
-        <div className="p-4">
-
+        <div className={"flex flex-grow flex-col gap-4"}>
             <div
             
             >
                 {/* Search and Advanced Filters Toggle */}
-                <div className="flex gap-4">
+                <div className="flex flex-col md:flex-row gap-4">
                     <input
                         type="text"
                         placeholder={t('filter_placeholder')}
@@ -311,7 +310,7 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                     </div>
 
                     {/* Action Buttons */}
-                    <div className="flex gap-3">
+                    <div className="flex flex-col md:flex-row gap-3 flex-grow justify-end">
                         {/* View mode toggle */}
                         <button
                             onClick={() => setIsCompactMode(!isCompactMode)}
@@ -395,7 +394,7 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
 
             {/* Anime Grid/List */}
             {isCompactMode ? (
-                <div className="flex flex-col gap-2 p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
+                <div className="flex flex-col gap-2 p-0 md:p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
                     {filteredAnimes.map((anime) => (
                         <CompactAnimeItem
                             key={anime.id}
@@ -406,7 +405,7 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-0 md:p4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
                     {filteredAnimes.map((anime) => (
                         <AnimeCard
                             key={anime.id}
