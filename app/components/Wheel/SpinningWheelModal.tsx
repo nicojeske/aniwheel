@@ -2,12 +2,12 @@ import React, {useRef, useState} from 'react';
 import Confetti from 'react-confetti-boom';
 import configuration from '@/configuration';
 import AnimeEntryModel from '@/app/models/AnimeEntry';
-import {Wheel} from "@/app/components/Wheel";
-import AnimeCard from "@/app/components/AnimeGrid/AnimeCard";
+import {Wheel} from "@/app/components/Wheel/Wheel";
+import AnimeCard from "@/app/components/AnimeContent/AnimeGrid/Card/AnimeCard";
 import {useTranslations} from "next-intl";
 import useWheelAnimation from "@/app/hooks/useWheelAnimation";
 import {OpeningWithName} from "@/app/services/animethemesApi";
-import AudioPlayer from "@/app/components/AudioPlayer";
+import AudioPlayer from "@/app/components/Wheel/AudioPlayer";
 import {MediaSeason, MediaStatus} from "@/app/gql/graphql";
 import {AnimatePresence, motion} from "framer-motion";
 

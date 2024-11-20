@@ -1,4 +1,4 @@
-import AnimeList from "@/app/components/AnimeList";
+import Main from "@/app/components/Main";
 import {useTranslations} from "next-intl";
 import Footer from "@/app/components/Footer";
 
@@ -13,7 +13,7 @@ export default function Home() {
                         {t('title')} <span className="text-blue-500">{t('title_highlight')}</span>
                     </h1>
                     <h4 className="text-lg text-center sm:text-left text-gray-400">{t('subtitle')}</h4>
-                    <AnimeList/>
+                    <Main/>
                 </main>
             </div>
             <Footer/>
