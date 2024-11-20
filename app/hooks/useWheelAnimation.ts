@@ -88,12 +88,15 @@ export default function useWheelAnimation({
 
         // Play click sound when passing a pin
         const normalizedRotation = rotation % 360;
-        const arrowOffset = 90; // Arrow is at 90 degrees
+        const arrowOffset = 0; // Arrow is at top (0 degrees)
         const currentArrowRotation = (normalizedRotation + arrowOffset) % 360;
         const degreesPerPin = 360 / animes.length;
-        const rotationSinceLastClick = currentArrowRotation - lastClickRotationRef.current;
 
-        if (rotationSinceLastClick >= degreesPerPin || rotationSinceLastClick < 0) {
+        // Calculate the pin position more precisely
+        const currentPin = Math.floor(currentArrowRotation / degreesPerPin);
+        const lastPin = Math.floor(lastClickRotationRef.current / degreesPerPin);
+
+        if (currentPin !== lastPin) {
             playClickSound();
             lastClickRotationRef.current = currentArrowRotation;
         }
@@ -106,13 +109,14 @@ export default function useWheelAnimation({
             currentRotationRef.current = rotation % 360;
 
             // Determine selected anime
-            const adjustedRotation = ((360 - (normalizedRotation + arrowOffset)) + 360) % 360;
+            const adjustedRotation = (360 - normalizedRotation) % 360;
             const segmentAngle = 360 / animes.length;
             const selectedIndex = Math.floor(adjustedRotation / segmentAngle) % animes.length;
             const selected = animes[selectedIndex];
             setSelectedAnime(selected);
         }
     };
+
 
     const spinWheel = () => {
         if (isSpinning) return;
