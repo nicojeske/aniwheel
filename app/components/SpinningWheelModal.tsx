@@ -3,7 +3,7 @@ import Confetti from 'react-confetti-boom';
 import configuration from '@/configuration';
 import AnimeEntryModel from '@/app/models/AnimeEntry';
 import {Wheel} from "@/app/components/Wheel";
-import AnimeCard from "@/app/components/AnimeCard";
+import AnimeCard from "@/app/components/AnimeGrid/AnimeCard";
 import {useTranslations} from "next-intl";
 import useWheelAnimation from "@/app/hooks/useWheelAnimation";
 import {OpeningWithName} from "@/app/services/animethemesApi";
@@ -38,7 +38,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
 
     return (
 
-        <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center z-50">
+        <div className="fixed inset-0 bg-black/50 bg-opacity-10 flex items-center justify-center">
             {/* Confetti */}
             {showConfetti && configuration.enableConfetti && (
                 <div className={"z-50"}>
@@ -68,8 +68,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                 selected={true}
                                 title={selectedAnime ? selectedAnime.title : '???'}
                                 id={selectedAnime ? selectedAnime.id : 0}
-                                onSelect={() => {
-                                }}
+                                onSelect={() => {}}
                                 showSelectionIndicator={false}
                             />
                             {openingTheme && (

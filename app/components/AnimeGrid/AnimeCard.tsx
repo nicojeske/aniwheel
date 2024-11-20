@@ -2,9 +2,14 @@ import React from "react";
 import classNames from "classnames";
 import Image from "next/image";
 import {SelectableModel} from "@/app/models/generic/SelectableModel";
-import AnimeEntryModel from "@/app/models/AnimeEntry";
 
-type AnimeCardProps = SelectableModel<AnimeEntryModel> & {
+export type AnimeCardModel = {
+    id: number;
+    title: string;
+    coverImageUrl: string;
+}
+
+type AnimeCardProps = SelectableModel<AnimeCardModel> & {
     showSelectionIndicator?: boolean;
 }
 const AnimeCard: React.FC<AnimeCardProps> = (

@@ -3,7 +3,7 @@
 import React, {useEffect, useState} from 'react';
 import {QueryResult, useLazyQuery} from '@apollo/client';
 import {AnimeForUserQuery, Exact, MediaListStatus} from '@/app/gql/graphql';
-import AnimeGrid from '@/app/components/AnimeGrid';
+import AnimeGrid from '@/app/components/AnimeGrid/AnimeGrid';
 import UsernameInputs from '@/app/components/UsernameInputs';
 import {animesForUser} from '@/app/queries/anilistQueries';
 import {useTranslations} from 'next-intl';

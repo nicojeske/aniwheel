@@ -25,7 +25,29 @@
     "list_title": "Common animes {sameCount}. Selected: {selectedCount}"
   },
   "AnimeGrid": {
-    "filter_placeholder": "Filter by title..."
+    "filter_placeholder": "Filter by title...",
+    "genres": "Genres",
+    "seasons": "Seasons",
+    "status": "Status",
+    "episode_count": "Episodes",
+    "average_score": "Average score",
+    "active_genres": "Active genres",
+    "active_seasons": "Active seasons",
+    "advanced_filters": "Advanced filters",
+    "select_status": "Select status",
+    "select_year": "Select year",
+    "select_genres": "Select genres",
+    "select_seasons": "Select seasons",
+    "year": "Year",
+    "season_winter": "Winter",
+    "season_spring": "Spring",
+    "season_summer": "Summer",
+    "season_fall": "Fall",
+    "status_finished": "Finished",
+    "status_releasing": "Releasing",
+    "status_not_yet_released": "Not yet released",
+    "status_cancelled": "Cancelled",
+    "status_hiatus": "Hiatus"
   },
   "Spinner": {
     "undecided_title": "Spin the wheel!",

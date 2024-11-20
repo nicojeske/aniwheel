@@ -16,6 +16,12 @@ export const animesForUser = graphql(`
                             romaji
                         }
                         id
+                        averageScore
+                        episodes 
+                        genres
+                        status
+                        season
+                        seasonYear
                     }
                 }
             }

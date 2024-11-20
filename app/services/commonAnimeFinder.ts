@@ -21,14 +21,7 @@ async function fetchAnimeForUser(
 
                 if (animeId && entry.media) {
                     const media: Media = {
-                        id: entry.media.id,
-                        title: {
-                            english: entry.media.title?.english,
-                            romaji: entry.media.title?.romaji,
-                        },
-                        coverImage: {
-                            extraLarge: entry.media.coverImage?.extraLarge,
-                        },
+                        ...entry.media,
                         isFavourite: false,
                         isFavouriteBlocked: false
                     }

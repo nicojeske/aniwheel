@@ -25,7 +25,29 @@
     "list_title": "Gemeinsame Animes {sameCount}. Ausgewählt: {selectedCount}"
   },
   "AnimeGrid": {
-    "filter_placeholder": "Filter nach Titel..."
+    "filter_placeholder": "Filter by title...",
+    "genres": "Genres",
+    "seasons": "Seasons",
+    "status": "Status",
+    "episode_count": "Episodes",
+    "average_score": "Average score",
+    "active_genres": "Active genres",
+    "active_seasons": "Active seasons",
+    "advanced_filters": "Erweiterte Filter",
+    "select_status": "Select status",
+    "select_year": "Select year",
+    "year": "Jahr",
+    "select_genres": "Select genres",
+    "select_seasons": "Select seasons",
+    "season_winter": "Winter",
+    "season_spring": "Spring",
+    "season_summer": "Summer",
+    "season_fall": "Fall",
+    "status_finished": "Finished",
+    "status_releasing": "Releasing",
+    "status_not_yet_released": "Not yet released",
+    "status_cancelled": "Cancelled",
+    "status_hiatus": "Hiatus"
   },
   "Spinner": {
     "undecided_title": "Drehe am heiligen Rad!",
