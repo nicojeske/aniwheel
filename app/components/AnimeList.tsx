@@ -24,6 +24,7 @@ export default function AnimeList() {
     const windowSize = useWindowSize();
 
     const [isClient, setIsClient] = useState(false);
+    const isDesktop = windowSize.width >= 1024; // Assuming 1024px as the breakpoint for desktop
 
     const [userSelectionsByUsernames, setUserSelectionsByUsernames] = useLocalStorage<{ [key: string]: UserSelection }>(
         'userSelectionsByUsernames',
@@ -86,7 +87,9 @@ export default function AnimeList() {
     }
 
     const fetchAnimes = async (
-        fetchFunction: (options: { variables: { userName: string; status: MediaListStatus } }) => Promise<QueryResult<AnimeForUserQuery, Exact<{ userName?: string | null }>>>,
+        fetchFunction: (options: {
+            variables: { userName: string; status: MediaListStatus }
+        }) => Promise<QueryResult<AnimeForUserQuery, Exact<{ userName?: string | null }>>>,
         userNames: string[],
         watchState: MediaListStatus
     ): Promise<AnimeEntryModel[]> => {
@@ -174,34 +177,31 @@ export default function AnimeList() {
         const localUserselection = userSelectionsByUsernames[getUsernamesKey(userSelection.userNames)];
         const storageUserSelection = userSelectionsByUsernames[getUsernamesKey(userSelection.userNames)];
 
-       if (localUserselection && storageUserSelection) {
-           setUserSelection(prevSelections => ({
-               ...prevSelections,
-               selections: storageUserSelection.selections,
-           }));
+        if (localUserselection && storageUserSelection) {
+            setUserSelection(prevSelections => ({
+                ...prevSelections,
+                selections: storageUserSelection.selections,
+            }));
         }
     }, [userSelectionsByUsernames]);
 
     const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
     const selectedAnimes = animes.filter(anime => userSelection.selections[userSelection.watchState]?.includes(anime.id));
 
-    return (
-        <div className="flex flex-col gap-6 w-full">
+    const ConfigurationSection = () => (
+        <div className={`
+            flex flex-col gap-6 w-full
+            ${isDesktop ? 'lg:w-1/4 lg:sticky lg:top-10 lg:h-screen lg:overflow-y-auto lg:p-1' : ''}
+        `}>
             <KofiButton/>
-
-            {/* Username Inputs */}
             <UsernameInputs
                 usernames={userSelection.userNames}
                 setUsernames={setUsernames}
             />
-
-            {/* MediaListStatus Selector */}
             <MediaListStatusSelector
                 selectedWatchState={userSelection.watchState}
                 setSelectedWatchState={setWatchState}
             />
-
-            {/* Fetch Button */}
             <CustomButton
                 disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
                 onClick={fetchButton}
@@ -210,9 +210,7 @@ export default function AnimeList() {
                 disabledText={t('fetch_button_disabled')}
                 loading={loading}
             />
-
-            {/* Show Wheel Button */}
-            {animes.length > 0 && (
+            {animes && animes.length > 0 && (
                 <CustomButton
                     onClick={() => setShowWheel(true)}
                     text={t('show_wheel_button')}
@@ -220,38 +218,40 @@ export default function AnimeList() {
                     disabled={selectedAnimes.length < 2}
                 />
             )}
+        </div>
+    );
 
-            {/* Anime Grid */
-            }
-            <div className="mt-8">
-                {error && <div className="text-red-500">
-                    Animes could not be fetched. Please try again later.
-                </div>}
-                {loading ? (
-                    <div>{t('loading')}</div>
-                ) : animes.length > 0 ? (
-                    <>
-                        <AnimeGrid models={animes} selectedIds={selectedAnimes.map(x => x.id)}
-                                   onSelect={handleSelectAnime}/>
-                    </>
-                ) : (
-                    <div>{t('no_common')}</div>
-                )}
-            </div>
+    const AnimeGridSection = () => (
+        <div className="mt-8 lg:mt-0 lg:w-3/4">
+            {error && <div className="text-red-500">{t('fetch_error')}</div>}
+            {loading ? (
+                <div>{t('loading')}</div>
+            ) : animes && animes.length > 0 ? (
+                <AnimeGrid
+                    models={animes}
+                    selectedIds={selectedAnimes.map(x => x.id)}
+                    onSelect={handleSelectAnime}
+                />
+            ) : (
+                <div>{t('no_common')}</div>
+            )}
+        </div>
+    );
 
-            {/* Spinning Wheel Modal */}
-            {
-                showWheel && selectedAnimes.length >= 2 && (
-                    <SpinningWheelModal
-                        selectedAnimes={selectedAnimes}
-                        onClose={() => setShowWheel(false)}
-                        onSelection={(anime) => setDrawnAnime(anime)}
-                        spinWheelSize={spinWheelSize}
-                        showConfetti={!!drawnAnime && configuration.enableConfetti}
-                        openingTheme={data}
-                    />
-                )
-            }
+    return (
+        <div className={`flex ${isDesktop ? 'flex-row' : 'flex-col'} gap-6 w-full`}>
+            <ConfigurationSection/>
+            <AnimeGridSection/>
+            {showWheel && selectedAnimes.length >= 2 && (
+                <SpinningWheelModal
+                    selectedAnimes={selectedAnimes}
+                    onClose={() => setShowWheel(false)}
+                    onSelection={(anime) => setDrawnAnime(anime)}
+                    spinWheelSize={spinWheelSize}
+                    showConfetti={!!drawnAnime && configuration.enableConfetti}
+                    openingTheme={data}
+                />
+            )}
         </div>
     );
 }
