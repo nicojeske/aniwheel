@@ -146,12 +146,6 @@ const WheelSegment = ({radius, startAngle, endAngle, fillColor, strokeColor}: {
             stroke={strokeColor}
             strokeWidth="2"
             className="transition-all duration-300"
-            whileHover={{
-                filter: 'brightness(1.1)',
-                scale: 1.02,
-                translateX: radius * 0.01 * Math.cos((startAngle + endAngle) / 2 * Math.PI / 180),
-                translateY: radius * 0.01 * Math.sin((startAngle + endAngle) / 2 * Math.PI / 180)
-            }}
             filter="url(#modernGlow)"
         />
     );
@@ -198,8 +192,8 @@ const WheelText = ({text, radius, angle, size, stringWrapLength}: {
 const WheelIndicator = ({size}: {size: number}) => (
     <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-[calc(100%-2px)] z-10">
         <motion.div
-            initial={{y: 45}}
-            animate={{y: 50}}
+            initial={{y: 0}}
+            animate={{y: 5}}
             transition={{
                 repeat: Infinity,
                 repeatType: "reverse",
