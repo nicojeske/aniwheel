@@ -194,7 +194,7 @@ export default function AnimeList() {
             flex flex-col gap-6 w-full
             ${isDesktop ? 'lg:w-1/4 lg:sticky lg:top-10 lg:h-screen lg:overflow-y-auto lg:p-1' : ''}
             `}>
-                <KofiButton/>
+                <KofiButton isShowing={!showWheel}/>
 
                 {/* Username Inputs */}
                 <UsernameInputs

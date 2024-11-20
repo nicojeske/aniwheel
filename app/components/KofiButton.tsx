@@ -1,7 +1,11 @@
 import Script from "next/script";
 import React from "react";
 
-export default function KofiButto() {
+type KofiButtonProps = {
+    isShowing: boolean;
+}
+
+export default function KofiButton({isShowing}: KofiButtonProps) {
     return (
         <>
             <Script src={'https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'} onReady={() => {
@@ -14,12 +18,18 @@ export default function KofiButto() {
                 });
             }}/>
             <style>
-                {`
-                    .floatingchat-container-wrap { left: unset; top: 0px; right: 50px; width: 50%; }
-                    .floatingchat-container-wrap-mobi { left: unset; top: 0px; right: 50px; width: 50%;}
-                    .floating-chat-kofi-popup-iframe { left: unset; top: 0px; right: 50px; }
-                    .floating-chat-kofi-popup-iframe-mobi { left: unset; top: 0px; right: 50px; }
-                    .floating-chat-kofi-popup-iframe-closer-mobi { left: unset; top: 0px; right: 50px; }
+                {isShowing ? `
+                    .floatingchat-container-wrap { left: 50px; right: unsetpx; width: 50%; }
+                    .floatingchat-container-wrap-mobi { left: 50px; right: unsetpx; width: 50%;}
+                    .floating-chat-kofi-popup-iframe { left: 50px; right: unsetpx; }
+                    .floating-chat-kofi-popup-iframe-mobi { left: 50px; right: unsetpx; }
+                    .floating-chat-kofi-popup-iframe-closer-mobi { left: unset; right: unsetpx; }
+                ` : `
+                    .floatingchat-container-wrap { display: none; }
+                    .floatingchat-container-wrap-mobi { display: none; }
+                    .floating-chat-kofi-popup-iframe { display: none; }
+                    .floating-chat-kofi-popup-iframe-mobi { display: none; }
+                    .floating-chat-kofi-popup-iframe-closer-mobi { display: none; }
                 `}
             </style>
         </>
