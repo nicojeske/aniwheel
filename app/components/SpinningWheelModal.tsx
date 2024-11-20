@@ -34,12 +34,12 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
     const wheelRef = useRef<SVGSVGElement>(null);
 
     function selectRandomAnimeTillLimit(animes: AnimeEntryModel[]): AnimeEntryModel[] {
-        const limit = configuration.wheelLimit;
+        const limit = wheelLimit;
         const shuffled = animes.sort(() => 0.5 - Math.random());
         return shuffled.slice(0, Math.min(limit, animes.length));
     }
 
-    const [filteredAnimes, setFilteredAnimes] = useState<AnimeEntryModel[]>(selectRandomAnimeTillLimit(selectedAnimes));
+    const [filteredAnimes] = useState<AnimeEntryModel[]>(selectRandomAnimeTillLimit(selectedAnimes));
 
     const {isSpinning, selectedAnime, spinWheel} = useWheelAnimation({
         animes: filteredAnimes,
