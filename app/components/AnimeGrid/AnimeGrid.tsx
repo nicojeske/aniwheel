@@ -57,6 +57,16 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
         return t(`status_${status.toLowerCase()}`);
     }
 
+    const clearSelection = () => {
+        for (const id of selectedIds) {
+            onSelect(id);
+        }
+    }
+
+    const isFiltering = filteredAnimes.length !== models.length;
+    // Number of selected animes not in the filtered list
+    const selectedAnimesOutOfFiltered = selectedIds.filter(id => !filteredAnimes.map(anime => anime.id).includes(id)).length
+
     return (
         <div className="p-4">
 
@@ -111,16 +121,6 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                         searchable={false}
                     />
 
-                    {/* Status Filter */}
-                    <MultiSelect<string>
-                        options={allUniqueStatuses}
-                        selectedValues={selectedStatus}
-                        onChange={setSelectedStatus}
-                        getOptionLabel={translateStatus}
-                        label={t('status')}
-                        placeholder={t('select_status')}
-                    />
-
                     {/* Year Filter */}
                     <MultiSelect<number>
                         options={allUniqueSeasonYears.sort((a, b) => b - a)} // Sort years descending
@@ -131,6 +131,15 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                         searchable={true}
                     />
 
+                    {/* Status Filter */}
+                    <MultiSelect<string>
+                        options={allUniqueStatuses}
+                        selectedValues={selectedStatus}
+                        onChange={setSelectedStatus}
+                        getOptionLabel={translateStatus}
+                        label={t('status')}
+                        placeholder={t('select_status')}
+                    />
 
                     {/* Episode Count Range */}
                     <RangeSlider
@@ -151,6 +160,35 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                     />
                 </div>
             </div>
+
+            {/* Status Bar */}
+            <div className="mt-4 mb-2 flex justify-between items-center text-white">
+                <div className="flex gap-4">
+                    <span>{t('total_animes', { count: models.length })}</span>
+                    <span>{t('selected_animes', { count: selectedIds.length })}</span>
+                </div>
+                {selectedIds.length > 0 && (
+                    <button
+                        onClick={clearSelection} // Clear all selections
+                        className="px-3 py-1 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors"
+                    >
+                        {t('clear_selection')}
+                    </button>
+                )}
+            </div>
+
+            {/* Filter Reminder */}
+            {isFiltering && selectedAnimesOutOfFiltered > 0 && selectedIds.length > 0 && (
+                <div className="mt-4 p-3 bg-yellow-600/20 border border-yellow-600/40 rounded-md text-yellow-200">
+                    <div className="flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        {t('filter_reminder', { count: selectedAnimesOutOfFiltered})}
+                    </div>
+                </div>
+            )}
+
 
             {/* Anime Grid */}
             <div

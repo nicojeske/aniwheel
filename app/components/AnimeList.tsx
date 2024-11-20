@@ -231,9 +231,6 @@ export default function AnimeList() {
                     <div>{t('loading')}</div>
                 ) : animes.length > 0 ? (
                     <>
-                        <h2 className="text-2xl font-semibold">
-                            {t('list_title', {sameCount: animes.length, selectedCount: selectedAnimes.length})}
-                        </h2>
                         <AnimeGrid models={animes} selectedIds={selectedAnimes.map(x => x.id)}
                                    onSelect={handleSelectAnime}/>
                     </>

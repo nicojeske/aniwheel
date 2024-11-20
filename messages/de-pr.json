@@ -47,7 +47,11 @@
     "status_releasing": "Releasing",
     "status_not_yet_released": "Not yet released",
     "status_cancelled": "Cancelled",
-    "status_hiatus": "Hiatus"
+    "status_hiatus": "Hiatus",
+    "total_animes": "Total animes: {count}",
+    "selected_animes": "Selected animes: {count}",
+    "clear_selection": "Clear selection",
+    "filter_reminder": "You have {count} anime(s) selected outside the current filter. Your selection will remain active while filtering."
   },
   "Spinner": {
     "undecided_title": "Drehe am heiligen Rad!",
