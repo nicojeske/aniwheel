@@ -7,7 +7,12 @@ import {MultiSelect} from "@/app/components/AnimeGrid/Filter/MultiSelect";
 import {RangeSlider} from "@/app/components/AnimeGrid/Filter/RangeSlider";
 import Image from "next/image";
 
-const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, selectedIds, onSelect}) => {
+type AnimeGridProps = MultipleSelectionModel<AnimeEntryModel> & {
+    wheelLimit?: number
+}
+
+
+const AnimeGrid: React.FC<AnimeGridProps> = ({models, selectedIds, onSelect, wheelLimit}) => {
     const t = useTranslations('AnimeGrid');
 
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
@@ -126,7 +131,8 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                                     viewBox="0 0 24 24"
                                     fill="currentColor"
                                 >
-                                    <path d="M6.361 2.943L0 21.056h4.942l1.077-3.133H11.4l1.052 3.133H22.9c.71 0 1.1-.392 1.1-1.101V17.53c0-.71-.39-1.101-1.1-1.101h-6.483V4.045c0-.71-.392-1.102-1.101-1.102h-2.422L6.361 2.943zm2.325 6.708l1.738 5.205H6.898l1.788-5.205z"/>
+                                    <path
+                                        d="M6.361 2.943L0 21.056h4.942l1.077-3.133H11.4l1.052 3.133H22.9c.71 0 1.1-.392 1.1-1.101V17.53c0-.71-.39-1.101-1.1-1.101h-6.483V4.045c0-.71-.392-1.102-1.101-1.102h-2.422L6.361 2.943zm2.325 6.708l1.738 5.205H6.898l1.788-5.205z"/>
                                 </svg>
                             </a>
                             {/* Modern Checkbox */}
@@ -175,7 +181,7 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
     return (
         <div className={"flex flex-grow flex-col gap-4"}>
             <div
-            
+
             >
                 {/* Search and Advanced Filters Toggle */}
                 <div className="flex flex-col md:flex-row gap-4">
@@ -379,14 +385,14 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                 )}
 
                 {/* Limit Selections */}
-                {selectedIds.length > 100 && (
+                {wheelLimit && selectedIds.length > wheelLimit && (
                     <div className="mt-4 p-3 bg-yellow-600/20 border border-yellow-600/40 rounded-md text-yellow-200">
                         <div className="flex items-center gap-2">
                             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
                                       d="M6 18L18 6M6 6l12 12"/>
                             </svg>
-                            {t('selection_disclaimer', {limit: 100})}
+                            {t('selection_disclaimer', {limit: wheelLimit})}
                         </div>
                     </div>
                 )}</div>
@@ -394,7 +400,8 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
 
             {/* Anime Grid/List */}
             {isCompactMode ? (
-                <div className="flex flex-col gap-2 p-0 md:p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
+                <div
+                    className="flex flex-col gap-2 p-0 md:p-4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
                     {filteredAnimes.map((anime) => (
                         <CompactAnimeItem
                             key={anime.id}
@@ -405,7 +412,8 @@ const AnimeGrid: React.FC<MultipleSelectionModel<AnimeEntryModel>> = ({models, s
                     ))}
                 </div>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-0 md:p4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
+                <div
+                    className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 p-0 md:p4 bg-gray-900 text-white rounded-xl backdrop-blur-lg shadow-lg">
                     {filteredAnimes.map((anime) => (
                         <AnimeCard
                             key={anime.id}

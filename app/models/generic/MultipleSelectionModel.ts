@@ -1,5 +1,5 @@
 export type MultipleSelectionModel<Model> = {
-    models: Model[];
-    selectedIds: number[];
-    onSelect: (id: number) => void;
+    models: Model[],
+    selectedIds: number[],
+    onSelect: (id: number) => void,
 }

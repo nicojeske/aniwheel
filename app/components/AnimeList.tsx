@@ -237,8 +237,11 @@ export default function AnimeList() {
                         <div>{t('loading')}</div>
                     ) : animes.length > 0 ? (
                         <>
-                            <AnimeGrid models={animes} selectedIds={selectedAnimes.map(x => x.id)}
-                                       onSelect={handleSelectAnime}/>
+                            <AnimeGrid models={animes}
+                                       selectedIds={selectedAnimes.map(x => x.id)}
+                                       onSelect={handleSelectAnime}
+                                       wheelLimit={configuration.wheelLimit}
+                            />
                         </>
                     ) : (
                         <div>{t('no_common')}</div>
@@ -255,6 +258,7 @@ export default function AnimeList() {
                             spinWheelSize={spinWheelSize}
                             showConfetti={!!drawnAnime && configuration.enableConfetti}
                             openingTheme={data}
+                            wheelLimit={configuration.wheelLimit}
                         />
                     )
                 }</div>
