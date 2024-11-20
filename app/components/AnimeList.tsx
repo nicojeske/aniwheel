@@ -24,7 +24,7 @@ export default function AnimeList() {
     const windowSize = useWindowSize();
 
     const [isClient, setIsClient] = useState(false);
-    const isDesktop = windowSize.width >= 1024; // Assuming 1024px as the breakpoint for desktop
+    const isDesktop = isClient && windowSize.width >= 1024; // Assuming 1024px as the breakpoint for desktop
 
     const [userSelectionsByUsernames, setUserSelectionsByUsernames] = useLocalStorage<{ [key: string]: UserSelection }>(
         'userSelectionsByUsernames',
