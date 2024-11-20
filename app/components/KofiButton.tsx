@@ -15,11 +15,11 @@ export default function KofiButto() {
             }}/>
             <style>
                 {`
-                    .floatingchat-container-wrap { left: unset; right: 50px; width: 50%; }
-                    .floatingchat-container-wrap-mobi { left: unset; right: 50px; width: 50%;}
-                    .floating-chat-kofi-popup-iframe { left: unset; right: 50px; }
-                    .floating-chat-kofi-popup-iframe-mobi { left: unset; right: 50px; }
-                    .floating-chat-kofi-popup-iframe-closer-mobi { left: unset; right: 50px; }
+                    .floatingchat-container-wrap { left: unset; top: 0px; right: 50px; width: 50%; }
+                    .floatingchat-container-wrap-mobi { left: unset; top: 0px; right: 50px; width: 50%;}
+                    .floating-chat-kofi-popup-iframe { left: unset; top: 0px; right: 50px; }
+                    .floating-chat-kofi-popup-iframe-mobi { left: unset; top: 0px; right: 50px; }
+                    .floating-chat-kofi-popup-iframe-closer-mobi { left: unset; top: 0px; right: 50px; }
                 `}
             </style>
         </>

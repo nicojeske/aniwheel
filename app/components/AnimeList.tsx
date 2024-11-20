@@ -185,7 +185,7 @@ export default function AnimeList() {
         }
     }, [userSelectionsByUsernames]);
 
-    const spinWheelSize = Math.min(0.5 * windowSize.width, 0.7 * windowSize.height);
+    const spinWheelSize = Math.min(0.5 * windowSize.width, 0.5 * windowSize.height);
     const selectedAnimes = animes.filter(anime => userSelection.selections[userSelection.watchState]?.includes(anime.id));
 
     return (
