@@ -18,7 +18,10 @@ const nextConfig: NextConfig = {
     },
     typescript: {
     },
-    output: "standalone"
+    output: "standalone",
+    experimental: {
+        reactCompiler: true
+    }
 };
 
 module.exports = withNextIntl(nextConfig);
