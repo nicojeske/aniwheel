@@ -10,7 +10,7 @@ const AnimeList: React.FC<{
     onSelect: (id: number) => void;
 }> = ({isCompactMode, animes, selectedIds, onSelect}) => {
 
-    const {ref, data, hasMore} = useInfiniteScroll(animes, 9, 3)
+    const {ref, data, hasMore} = useInfiniteScroll(animes, 9, 9)
 
     if (isCompactMode) {
         return (
