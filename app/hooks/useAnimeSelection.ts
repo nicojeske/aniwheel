@@ -66,6 +66,7 @@ export const useAnimeSelections = () => {
 
     const setUsernames = (usernames: string[]) => {
         setUserSelection(prev => ({ ...prev, userNames: usernames }));
+        setLastUsernameKey(getUsernamesKey(usernames));
     };
 
     const setWatchState = (watchState: MediaListStatus) => {
@@ -85,6 +86,7 @@ export const useAnimeSelections = () => {
     useEffect(() => {
         if (lastUsernameKey) {
             const lastUserSelection = userSelectionsByUsernames[lastUsernameKey];
+            console.log("lastUserSelection", lastUserSelection)
             if (lastUserSelection) {
                 setUserSelection(lastUserSelection);
             }
