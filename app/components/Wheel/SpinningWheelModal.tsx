@@ -10,6 +10,7 @@ import {OpeningWithName} from "@/app/services/animethemesApi";
 import AudioPlayer from "@/app/components/Wheel/AudioPlayer";
 import {MediaSeason, MediaStatus} from "@/app/gql/graphql";
 import {AnimatePresence, motion} from "framer-motion";
+import useUserSettings from "@/app/hooks/useUserSettings";
 
 interface SpinningWheelModalProps {
     selectedAnimes: AnimeEntryModel[];
@@ -40,13 +41,13 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
     }
 
     const [filteredAnimes] = useState<AnimeEntryModel[]>(selectRandomAnimeTillLimit(selectedAnimes));
+    const {autoplayOpening, setAutoplayOpening} = useUserSettings();
 
     const {isSpinning, selectedAnime, spinWheel} = useWheelAnimation({
         animes: filteredAnimes,
         wheelRef,
         onSelection,
     });
-
 
     return (
         <AnimatePresence>
@@ -117,15 +118,21 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
 
                             {openingTheme && (
                                 <motion.div
-                                    className="w-full"
+                                    className="w-full space-y-4"
                                     initial={{opacity: 0, y: 20}}
                                     animate={{opacity: 1, y: 0}}
                                 >
-                                    <AudioPlayer src={openingTheme.openingUrl} title={openingTheme.name} autoplay/>
+                                    <AudioPlayer src={openingTheme.openingUrl} title={openingTheme.name}
+                                                 autoplay={autoplayOpening}/>
                                 </motion.div>
                             )}
 
+                            <div className={`flex items-center gap-4 w-full`}>
+                                <ToggleAutoplayButton autoplayOpening={autoplayOpening} setAutoplayOpening={setAutoplayOpening} />
+                            </div>
+
                             <div className="flex items-center gap-4 w-full">
+
                                 <motion.button
                                     onClick={spinWheel}
                                     disabled={isSpinning}
@@ -175,5 +182,31 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
         </AnimatePresence>
     );
 };
+
+interface ToggleAutoplayButtonProps {
+    autoplayOpening: boolean;
+    setAutoplayOpening: (autoplayOpening: boolean) => void;
+}
+const ToggleAutoplayButton= ({setAutoplayOpening, autoplayOpening}: ToggleAutoplayButtonProps ) => (
+    <div className="flex items-center justify-between gap-5">
+        <label className="text-sm text-gray-300">Autoplay Opening</label>
+        <button
+            onClick={() => setAutoplayOpening(!autoplayOpening)}
+            className={`
+                relative inline-flex h-6 w-11 items-center rounded-full
+                transition-colors duration-300 ease-in-out
+                ${autoplayOpening ? 'bg-gradient-to-r from-blue-500 to-purple-500' : 'bg-gray-700'}
+            `}
+        >
+            <span
+                className={`
+                    inline-block h-4 w-4 transform rounded-full bg-white
+                    transition-transform duration-300 ease-in-out
+                    ${autoplayOpening ? 'translate-x-6' : 'translate-x-1'}
+                `}
+            />
+        </button>
+    </div>
+)
 
 export default React.memo(SpinningWheelModal);

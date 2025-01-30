@@ -1,6 +1,7 @@
 import React, {useEffect, useRef, useState} from 'react';
 import configuration from "@/configuration";
 import classNames from 'classnames';
+import useUserSettings from "@/app/hooks/useUserSettings";
 
 type AudioPlayerProps = {
     src: string;
@@ -28,10 +29,10 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     const [progress, setProgress] = useState(0);
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
-    const [volume, setVolume] = useState(configuration.openingsDefaultVolume * 100);
     const [showVolumeSlider, setShowVolumeSlider] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
+    const {audioVolume, setAudioVolume} = useUserSettings();
 
     const togglePlayPause = () => {
         if (isLoading) return;
@@ -83,7 +84,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
         const newVolume = parseFloat(e.target.value);
         if (audio) {
             audio.volume = newVolume / 100;
-            setVolume(newVolume);
+            setAudioVolume(newVolume);
             if (newVolume === 0) {
                 setIsMuted(true);
             } else if (isMuted) {
@@ -95,7 +96,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
     useEffect(() => {
         const audio = audioRef.current;
         if (audio) {
-            audio.volume = volume / 100;
+            audio.volume = audioVolume / 100;
 
             const onLoadedData = () => {
                 setDuration(audio.duration);
@@ -115,7 +116,7 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                 audio.removeEventListener('loadeddata', onLoadedData);
             };
         }
-    }, [autoplay, volume]);
+    }, [autoplay, audioVolume]);
 
 
     useEffect(() => {
@@ -209,14 +210,14 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                             viewBox="0 0 24 24"
                             stroke="currentColor"
                         >
-                            {isMuted || volume === 0 ? (
+                            {isMuted || audioVolume === 0 ? (
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth={2}
                                     d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z M17 14l2-2m-2 2l-2-2m2 2l2 2m-2-2l-2 2"
                                 />
-                            ) : volume < 50 ? (
+                            ) : audioVolume < 50 ? (
                                 <path
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
@@ -248,15 +249,15 @@ const AudioPlayer: React.FC<AudioPlayerProps> = ({
                                 type="range"
                                 min="0"
                                 max="100"
-                                value={volume}
+                                value={audioVolume}
                                 onChange={changeVolume}
                                 className="w-24 h-1.5 appearance-none bg-gray-700 rounded-full"
                                 style={{
-                                    background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${volume}%, rgb(55 65 81) ${volume}%, rgb(55 65 81) 100%)`
+                                    background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${audioVolume}%, rgb(55 65 81) ${audioVolume}%, rgb(55 65 81) 100%)`
                                 }}
                             />
                             <span className="text-xs text-gray-400 min-w-[2.5rem] text-center">
-                                {Math.round(volume)}%
+                                {Math.round(audioVolume)}%
                             </span>
                         </div>
                     )}
