@@ -48,7 +48,7 @@ const AnimeCard: React.FC<AnimeCardProps> = (
                 )}
 
                 {/* Image with Overlay */}
-                <AnimeImage src={anime.coverImageUrl} alt={anime.title}/>
+                <AnimeImage src={anime.coverImageUrlLarge} alt={anime.title}/>
             </div>
 
             {/* Title */}

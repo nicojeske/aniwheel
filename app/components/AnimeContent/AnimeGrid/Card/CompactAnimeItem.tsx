@@ -26,7 +26,7 @@ export const CompactAnimeItem: React.FC<{
             <div className="flex items-center gap-3">
                 <div className="relative flex-shrink-0">
                     <Image
-                        src={anime.coverImageUrl}
+                        src={anime.coverImageUrlMedium}
                         alt={anime.title}
                         width={40}
                         height={60}

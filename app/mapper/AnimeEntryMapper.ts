@@ -5,7 +5,8 @@ function convertAnilistEntry (entry: Media): AnimeEntryModel {
     return {
         id: entry.id,
         title: entry.title?.english ?? entry.title?.romaji ?? "",
-        coverImageUrl: entry.coverImage?.extraLarge ?? "",
+        coverImageUrlLarge: entry.coverImage?.extraLarge ?? "",
+        coverImageUrlMedium: entry.coverImage?.medium ?? "",
         averageScore: entry.averageScore ?? 0,
         episodeCount: entry.episodes ?? 0,
         genres: entry.genres ? RemoveMaybeAsList(entry.genres) : [],

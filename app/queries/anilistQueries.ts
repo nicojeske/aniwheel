@@ -10,6 +10,7 @@ export const animesForUser = graphql(`
                     media {
                         coverImage {
                             extraLarge
+                            medium
                         }
                         title {
                             english

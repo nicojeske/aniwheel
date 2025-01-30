@@ -100,7 +100,8 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                     anime={selectedAnime ?? {
                                         title: "???",
                                         id: -1,
-                                        coverImageUrl: "/cover.jpeg",
+                                        coverImageUrlLarge: "/cover.jpeg",
+                                        coverImageUrlMedium: "/cover.jpeg",
                                         averageScore: 0,
                                         genres: [],
                                         season: MediaSeason.Fall,

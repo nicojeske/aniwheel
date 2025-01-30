@@ -3,7 +3,8 @@ import {MediaSeason, MediaStatus} from "@/app/gql/graphql";
 type AnimeEntryModel = {
     id: number,
     title: string,
-    coverImageUrl: string,
+    coverImageUrlLarge: string,
+    coverImageUrlMedium: string,
     averageScore: number,
     episodeCount: number,
     genres: string[],
