@@ -12,7 +12,7 @@ export const configuration = {
     playClicks: parseBoolean(configurationEnvs.playClicks, true),
     enableConfetti: parseBoolean(configurationEnvs.enableConfetti, true),
     enableOpenings: parseBoolean(configurationEnvs.enableOpenings, true),
-    openingsDefaultVolume: parseNumber(configurationEnvs.openingsDefaultVolume, 0.1),
+    openingsDefaultVolume: parseNumber(configurationEnvs.openingsDefaultVolume, 10),
     wheelLimit: parseNumber(configurationEnvs.wheelLimit, 25),
 };
 
