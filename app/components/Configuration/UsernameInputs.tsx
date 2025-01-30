@@ -19,7 +19,7 @@ const UsernamesInput: React.FC<UsernamesInputProps> = ({
     const handleAddUsername = useCallback(() => {
         if (usernames.length >= maxUsernames) return;
         setUsernames([...usernames, '']);
-    }, [usernames.length, maxUsernames, setUsernames]);
+    }, [usernames, maxUsernames, setUsernames]);
 
     const handleRemoveUsername = useCallback(
         (index: number) => {
