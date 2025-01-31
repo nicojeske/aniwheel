@@ -4,6 +4,7 @@ import {MediaListStatus} from "@/app/gql/graphql";
 import {animesForUser} from "@/app/queries/anilistQueries";
 import {useLazyQuery} from "@apollo/client";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
+import * as Sentry from "@sentry/react";
 
 export const useAnimeData = () => {
     const [animes, setAnimes] = useState<AnimeEntryModel[]>([]);
@@ -19,13 +20,22 @@ export const useAnimeData = () => {
     ) => {
         setLoading(true);
         try {
-            const commonAnimes = await getCommonAnimesForUsers(userNames, watchState, fetchFunction);
+            const commonAnimesResult = await getCommonAnimesForUsers(userNames, watchState, fetchFunction);
+
+            if (commonAnimesResult.failed) {
+                const failure = commonAnimesResult.error;
+                setError(failure.message);
+                return [];
+            }
+
+            const commonAnimes = commonAnimesResult.data;
+
             setAnimes(commonAnimes);
             setError(null);
             return commonAnimes;
         } catch (error) {
-            console.error('Error fetching animes:', error);
-            setError('Animes could not be fetched. Please try again later.');
+            setError(`Failed to fetch animes. Please try again later.`);
+            Sentry.captureException(error);
             return [];
         } finally {
             setLoading(false);
