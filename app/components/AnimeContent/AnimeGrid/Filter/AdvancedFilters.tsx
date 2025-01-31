@@ -1,5 +1,4 @@
 import React from 'react';
-import {useTranslations} from "next-intl";
 import {FilterStates, UniqueOptions} from "@/app/hooks/useAnimeFilter";
 import {MultiSelect} from "@/app/components/AnimeContent/AnimeGrid/Filter/MultiSelect";
 import {RangeSlider} from "@/app/components/AnimeContent/AnimeGrid/Filter/RangeSlider";
@@ -10,18 +9,38 @@ interface AdvancedFiltersProps {
     uniqueOptions: UniqueOptions;
 }
 
+function convertSeasonToString(season: string): string {
+    switch (season.toUpperCase()) {
+        case "WINTER":
+            return "Winter";
+        case "SPRING":
+            return "Spring";
+        case "SUMMER":
+            return "Summer";
+        case "FALL":
+            return "Fall";
+        default:
+            return season;
+    }
+}
+
+function convertStatusToString(status: string): string {
+    switch (status.toUpperCase()) {
+        case "FINISHED":
+            return "Finished";
+        case "RELEASING":
+            return "Releasing";
+        case "NOT_YET_RELEASED":
+            return "Not Yet Released";
+        case "CANCELLED":
+            return "Cancelled";
+        default:
+            return status;
+    }
+}
+
+
 export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFiltersProps) => {
-    const t = useTranslations('AnimeGrid');
-
-    const translateSeason = (season: string) => {
-        // @ts-expect-error Use enum values as translation keys
-        return t(`season_${season.toLowerCase()}`);
-    }
-
-    const translateStatus = (status: string) => {
-        // @ts-expect-error Use enum values as translation keys
-        return t(`status_${status.toLowerCase()}`);
-    }
 
     return (
         <div className={`transition-all duration-300 ease-in-out overflow-hidden ${
@@ -33,8 +52,8 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     options={uniqueOptions.genres}
                     selectedValues={filterStates.selectedGenres}
                     onChange={filterStates.setSelectedGenres}
-                    label={t('genres')}
-                    placeholder={t('select_genres')}
+                    label="Genre"
+                    placeholder="Select genres"
                     searchable={true}
                 />
 
@@ -43,9 +62,9 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     options={uniqueOptions.seasons}
                     selectedValues={filterStates.selectedSeasons}
                     onChange={filterStates.setSelectedSeasons}
-                    getOptionLabel={translateSeason}
-                    label={t('seasons')}
-                    placeholder={t('select_seasons')}
+                    getOptionLabel={convertSeasonToString}
+                    label="Season"
+                    placeholder="Select seasons"
                     searchable={false}
                 />
 
@@ -54,8 +73,8 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     options={uniqueOptions.years.sort((a, b) => b - a)}
                     selectedValues={filterStates.selectedYears}
                     onChange={filterStates.setSelectedYears}
-                    label={t('year')}
-                    placeholder={t('select_year')}
+                    label="Year"
+                    placeholder="Select years"
                     searchable={true}
                 />
 
@@ -64,9 +83,9 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     options={uniqueOptions.statuses}
                     selectedValues={filterStates.selectedStatus}
                     onChange={filterStates.setSelectedStatus}
-                    getOptionLabel={translateStatus}
-                    label={t('status')}
-                    placeholder={t('select_status')}
+                    getOptionLabel={convertStatusToString}
+                    label="Media Status"
+                    placeholder="Select status"
                 />
 
                 {/* Episode Count Range */}
@@ -75,7 +94,7 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     max={Math.max(...uniqueOptions.episodeCounts)}
                     value={filterStates.episodeRange}
                     onChange={filterStates.setEpisodeRange}
-                    label={t('episode_count')}
+                    label="Episode count"
                 />
 
                 {/* Score Range */}
@@ -84,7 +103,7 @@ export const AdvancedFilters = ({shown, filterStates, uniqueOptions}: AdvancedFi
                     max={Math.max(...uniqueOptions.scores)}
                     value={filterStates.scoreRange}
                     onChange={filterStates.setScoreRange}
-                    label={t('average_score')}
+                    label="Score"
                 />
             </div>
         </div>

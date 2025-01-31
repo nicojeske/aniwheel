@@ -63,7 +63,8 @@ export default function Main() {
     // Effect for handling initial anime load and local storage
     useEffect(() => {
         const anyEmpty = (x: string) => x.trim() === '';
-        if (animes.length === 0 || userSelection.userNames.some(anyEmpty)) {
+        // @ts-expect-error test
+        if (animes.length === 0 || userSelection.usern.some(anyEmpty)) {
             return;
         }
 

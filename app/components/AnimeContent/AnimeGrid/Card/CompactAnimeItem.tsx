@@ -1,20 +1,27 @@
 import React from "react";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import Image from "next/image";
-import {useTranslations} from "next-intl";
+
+function convertSeasonToString(season: string): string {
+    switch (season.toUpperCase()) {
+        case "WINTER":
+            return "Winter";
+        case "SPRING":
+            return "Spring";
+        case "SUMMER":
+            return "Summer";
+        case "FALL":
+            return "Fall";
+        default:
+            return season;
+    }
+}
 
 export const CompactAnimeItem: React.FC<{
     anime: AnimeEntryModel,
     selected: boolean,
     onSelect: (id: number) => void,
 }> = ({anime, selected, onSelect}) => {
-
-    const t = useTranslations('AnimeGrid');
-
-    const translateSeason = (season: string) => {
-        // @ts-expect-error Use enum values as translation keys
-        return t(`season_${season.toLowerCase()}`);
-    }
 
     return (
         <div
@@ -47,11 +54,11 @@ export const CompactAnimeItem: React.FC<{
                         </div>
                     </div>
                     <div className="flex gap-2 text-xs text-gray-400 mt-1">
-                        <span>{translateSeason(anime.season)} {anime.seasonYear}</span>
+                        <span>{convertSeasonToString(anime.season)} {anime.seasonYear}</span>
                         <span>•</span>
-                        <span>{anime.episodeCount} {t('episodes')}</span>
+                        <span>{anime.episodeCount} Episodes</span>
                         <span>•</span>
-                        <span>{anime.averageScore}% {t('average_score')}</span>
+                        <span>{anime.averageScore}% Average score</span>
                     </div>
                 </div>
             </div>

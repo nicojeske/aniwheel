@@ -1,8 +1,8 @@
 import React, { useCallback } from 'react';
 import { MediaListStatus } from '@/app/gql/graphql';
-import { useTranslations } from "next-intl";
 import { motion } from 'framer-motion';
 import { ChevronUpDownIcon } from '@heroicons/react/24/outline';
+import {convertMediaStatusToString} from "@/app/mapper/WatchStatusMapper";
 
 interface MediaListStatusDropdownProps {
     selectedWatchState: MediaListStatus;
@@ -13,21 +13,15 @@ const MediaListStatusDropdown: React.FC<MediaListStatusDropdownProps> = ({
                                                                              selectedWatchState,
                                                                              setSelectedWatchState
                                                                          }) => {
-    const t = useTranslations('Selections');
 
     const handleChange = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
         setSelectedWatchState(e.target.value as MediaListStatus);
     }, [setSelectedWatchState]);
 
-    const translateWatchState = useCallback((watchState: MediaListStatus) => {
-        // @ts-expect-error - use enum as key
-        return t(`watch_state.${watchState.toString()}`);
-    }, [t]);
-
     return (
         <div className="flex flex-col gap-2">
             <label htmlFor="mediaListStatus" className="text-white font-medium">
-                {t('select_watchstate_button')}
+                Watch status
             </label>
             <div className="relative">
                 <motion.select
@@ -39,7 +33,7 @@ const MediaListStatusDropdown: React.FC<MediaListStatusDropdownProps> = ({
                 >
                     {Object.values(MediaListStatus).map((status) => (
                         <option key={status} value={status} className="bg-gray-800">
-                            {translateWatchState(status)}
+                            {convertMediaStatusToString(status)}
                         </option>
                     ))}
                 </motion.select>

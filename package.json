@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "codegen": "graphql-codegen"
+    "codegen": "graphql-codegen",
+    "prod": "next build && next start"
   },
   "dependencies": {
     "@apollo/client": "^3.11.10",
@@ -20,7 +21,6 @@
     "graphql": "^16.9.0",
     "howler": "^2.2.4",
     "next": "15.1.6",
-    "next-intl": "^3.25.1",
     "react": "^18.3.1",
     "react-confetti-boom": "^1.0.0",
     "react-dom": "^18.3.1",

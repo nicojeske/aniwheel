@@ -2,7 +2,6 @@ import CustomButton from "@/app/components/Configuration/CustomButton";
 import MediaListStatusSelector from "@/app/components/Configuration/MediaListStatusSelector";
 import UsernameInputs from "@/app/components/Configuration/UsernameInputs";
 import KofiButton from "@/app/components/KofiButton";
-import {useTranslations} from "next-intl";
 import {UserSelection} from "@/app/models/UserSelection";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import {MediaListStatus} from "@/app/gql/graphql";
@@ -32,7 +31,6 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
                                                                    onFetchAnimes,
                                                                    onShowWheel
                                                                }) => {
-    const t = useTranslations('Selections');
 
     return (
         <>
@@ -49,14 +47,14 @@ const ConfigurationPanel: React.FC<ConfigurationPanelProps> = ({
                 disabled={loading || (isClient && !userSelection.userNames.some(u => u.trim()))}
                 onClick={onFetchAnimes}
                 color="secondary"
-                text={t('fetch_button')}
-                disabledText={t('fetch_button_disabled')}
+                text="Fetch animes..."
+                disabledText="Please add a user"
                 loading={loading}
             />
             {animes && animes.length > 0 && (
                 <CustomButton
                     onClick={onShowWheel}
-                    text={t('show_wheel_button')}
+                    text="Open the wheel"
                     color="tertiary"
                     disabled={selectedAnimes.length < 2}
                 />

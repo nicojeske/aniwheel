@@ -1,5 +1,4 @@
 import React, {useCallback, useMemo} from 'react';
-import {useTranslations} from 'next-intl';
 import {motion, AnimatePresence} from 'framer-motion';
 import {PlusCircleIcon, TrashIcon} from '@heroicons/react/24/outline';
 
@@ -14,7 +13,6 @@ const UsernamesInput: React.FC<UsernamesInputProps> = ({
                                                            setUsernames,
                                                            maxUsernames = 5,
                                                        }) => {
-    const t = useTranslations('Selections');
 
     const handleAddUsername = useCallback(() => {
         if (usernames.length >= maxUsernames) return;
@@ -60,7 +58,7 @@ const UsernamesInput: React.FC<UsernamesInputProps> = ({
                                 whileTap={{scale: 0.95}}
                                 onClick={() => handleRemoveUsername(index)}
                                 className="p-2 bg-red-600 text-white rounded-full hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200"
-                                aria-label={t('remove_username_button')}
+                                aria-label={"Remove"}
                             >
                                 <TrashIcon className="w-5 h-5"/>
                             </motion.button>
@@ -70,7 +68,7 @@ const UsernamesInput: React.FC<UsernamesInputProps> = ({
                             value={username}
                             onChange={(e) => handleInputChange(index, e.target.value)}
                             className="p-2 border border-gray-600 bg-gray-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 w-full transition-all duration-200 placeholder-gray-400"
-                            placeholder={t('add_username_placeholder')}
+                            placeholder="Anilist username..."
                         />
                     </motion.div>
                 ))}
@@ -83,7 +81,7 @@ const UsernamesInput: React.FC<UsernamesInputProps> = ({
                     className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-colors duration-200 flex items-center justify-center w-full"
                 >
                     <PlusCircleIcon className="w-5 h-5 mr-2"/>
-                    {t('add_username_button')}
+                    Add user
                 </motion.button>
             )}
         </div>

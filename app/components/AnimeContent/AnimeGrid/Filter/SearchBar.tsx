@@ -1,5 +1,4 @@
 import React from 'react';
-import {useTranslations} from "next-intl";
 
 interface SearchBarProps {
     value: string;
@@ -9,13 +8,12 @@ interface SearchBarProps {
 }
 
 export const SearchBar = ({value, onChange, toggleAdvancedFilters, showAdvancedFilters}: SearchBarProps) => {
-    const t = useTranslations('AnimeGrid');
 
     return (
         <div className="flex flex-col md:flex-row gap-4">
             <input
                 type="text"
-                placeholder={t('filter_placeholder')}
+                placeholder="Filter by title..."
                 value={value}
                 onChange={(e) => onChange(e.target.value)}
                 className="flex-1 p-2 rounded-md bg-gray-800 text-white"
@@ -32,7 +30,7 @@ export const SearchBar = ({value, onChange, toggleAdvancedFilters, showAdvancedF
                 >
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7"/>
                 </svg>
-                {t('advanced_filters')}
+                Advanced filters
             </button>
         </div>
     );

@@ -1,5 +1,4 @@
 import React, { useMemo } from "react";
-import { useTranslations } from "next-intl";
 import { motion } from "framer-motion";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 
@@ -38,13 +37,12 @@ const CustomButton: React.FC<CustomButtonProps> = ({
                                                        color = 'primary',
                                                        loading = false
                                                    }) => {
-    const t = useTranslations('Selections');
 
     const buttonText = useMemo(() => {
-        if (loading) return t('loading');
+        if (loading) return 'Loading...';
         if (disabled) return disabledText;
         return text;
-    }, [loading, disabled, disabledText, text, t]);
+    }, [loading, disabled, disabledText, text]);
 
     const buttonClasses = useMemo(() => {
         return `

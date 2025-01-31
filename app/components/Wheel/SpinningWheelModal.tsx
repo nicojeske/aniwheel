@@ -4,7 +4,6 @@ import configuration from '@/configuration';
 import AnimeEntryModel from '@/app/models/AnimeEntry';
 import {Wheel} from "@/app/components/Wheel/Wheel";
 import AnimeCard from "@/app/components/AnimeContent/AnimeGrid/Card/AnimeCard";
-import {useTranslations} from "next-intl";
 import useWheelAnimation from "@/app/hooks/useWheelAnimation";
 import {OpeningWithName} from "@/app/services/animethemesApi";
 import AudioPlayer from "@/app/components/Wheel/AudioPlayer";
@@ -31,7 +30,6 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                                                    openingTheme,
                                                                    wheelLimit
                                                                }) => {
-    const t = useTranslations('Spinner');
     const wheelRef = useRef<SVGSVGElement>(null);
 
     function selectRandomAnimeTillLimit(animes: AnimeEntryModel[]): AnimeEntryModel[] {
@@ -89,7 +87,7 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                 animate={{scale: selectedAnime ? 1.1 : 1}}
                                 transition={{duration: 0.3}}
                             >
-                                {selectedAnime ? t('decided_title') : t('undecided_title')}
+                                {selectedAnime ? "The wheel has decided" : "Spin the wheel"}
                             </motion.h3>
 
                             <motion.div
@@ -153,9 +151,9 @@ const SpinningWheelModal: React.FC<SpinningWheelModalProps> = ({
                                                 animate={{rotate: 360}}
                                                 transition={{duration: 1, repeat: Infinity, ease: "linear"}}
                                             />
-                                            {t('spinning')}
+                                            Spinning...
                                         </span>
-                                    ) : t('spin_button')}
+                                    ) : "Spin"}
                                 </motion.button>
 
                                 <motion.button

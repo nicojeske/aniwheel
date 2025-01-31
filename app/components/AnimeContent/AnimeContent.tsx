@@ -1,7 +1,6 @@
 // components/AnimeContent.tsx
 import AnimeEntryModel from "@/app/models/AnimeEntry";
 import {OpeningWithName} from "@/app/services/animethemesApi";
-import {useTranslations} from "next-intl";
 import AnimeGrid from "@/app/components/AnimeContent/AnimeGrid/AnimeGrid";
 import configuration from "@/configuration";
 import SpinningWheelModal from "@/app/components/Wheel/SpinningWheelModal";
@@ -35,14 +34,15 @@ const AnimeContent: React.FC<AnimeContentProps> = ({
                                                        onClose,
                                                        onSelection
                                                    }) => {
-    const t = useTranslations('Selections');
 
     return (
         <div className="mt-8 lg:mt-0 lg:w-3/4">
             <div className="mt-8 lg:mt-0">
-                {error && <div className="text-red-500">{t('fetch_error')}</div>}
+                {error && <div className="text-red-500">
+                    An error occurred while fetching the animes. Please try again later.
+                </div>}
                 {loading ? (
-                    <div>{t('loading')}</div>
+                    <div>Loading...</div>
                 ) : animes.length > 0 ? (
                     <AnimeGrid
                         models={animes}
@@ -51,7 +51,7 @@ const AnimeContent: React.FC<AnimeContentProps> = ({
                         wheelLimit={configuration.wheelLimit}
                     />
                 ) : (
-                    <div>{t('no_common')}</div>
+                    <div>No common animes found</div>
                 )}
             </div>
 

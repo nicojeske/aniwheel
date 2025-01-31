@@ -1,7 +1,6 @@
 import React, {useState} from "react";
 import {MultipleSelectionModel} from "@/app/models/generic/MultipleSelectionModel";
 import AnimeEntryModel from "@/app/models/AnimeEntry";
-import {useTranslations} from "next-intl";
 import {useAnimeFilters} from "@/app/hooks/useAnimeFilter";
 import AnimeFilters from "@/app/components/AnimeContent/AnimeGrid/Filter/AnimeFilters";
 import AlertMessage from "@/app/components/AnimeContent/AnimeGrid/Alerts/AlertMessage";
@@ -18,7 +17,6 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({
                                                  onSelect,
                                                  wheelLimit,
                                              }) => {
-    const t = useTranslations('AnimeGrid');
     const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
     const [isCompactMode, setIsCompactMode] = useState(false);
 
@@ -75,16 +73,14 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({
                     selectedIds.length > 0 && (
                         <AlertMessage
                             icon="info"
-                            message={t('filter_reminder', {
-                                count: selectedAnimesOutOfFiltered,
-                            })}
+                            message={`You have ${selectedAnimesOutOfFiltered} anime(s) selected outside the current filter. Your selection will remain active while filtering.`}
                         />
                     )}
 
                 {wheelLimit && selectedIds.length > wheelLimit && (
                     <AlertMessage
                         icon="close"
-                        message={t('selection_disclaimer', {limit: wheelLimit})}
+                        message={`You have selected over ${wheelLimit} animes. For performance reasons the Wheel will select {limit} animes randomly from your selection.`}
                     />
                 )}
             </div>

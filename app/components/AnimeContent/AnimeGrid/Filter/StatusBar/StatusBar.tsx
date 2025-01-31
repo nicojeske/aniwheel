@@ -1,5 +1,4 @@
 import React from 'react';
-import {useTranslations} from "next-intl";
 import CounterBadge from "@/app/components/AnimeContent/AnimeGrid/Filter/StatusBar/CounterBadge";
 import ActionButton from "@/app/components/AnimeContent/AnimeGrid/Filter/StatusBar/ActionButton";
 import ViewModeIcon from "@/app/components/AnimeContent/AnimeGrid/Filter/StatusBar/ViewModeIcon";
@@ -30,18 +29,17 @@ export const StatusBar = ({
                               onClearSelection,
                               areAllSelected
                           }: StatusBarProps) => {
-    const t = useTranslations('AnimeGrid');
 
     return (
         <div className="mt-4 mb-2 flex flex-wrap gap-4 items-center justify-between bg-gray-800 p-4 rounded-lg shadow-lg">
             <div className="flex flex-wrap items-center gap-6">
                 <CounterBadge
-                    label={t('total')}
+                    label="Total"
                     count={totalCount}
                 />
 
                 <CounterBadge
-                    label={t('selected')}
+                    label="Selected"
                     count={selectedCount}
                     variant={showSelectedOnly ? 'primary' : selectedCount > 0 ? 'success' : 'default'}
                     onClick={onToggleSelectedOnly}
@@ -49,7 +47,7 @@ export const StatusBar = ({
 
                 {filteredCount !== totalCount && (
                     <CounterBadge
-                        label={t('filtered')}
+                        label="Filtered"
                         count={filteredCount}
                         variant="primary"
                     />
@@ -59,7 +57,7 @@ export const StatusBar = ({
             <div className="flex flex-col md:flex-row gap-3 flex-grow justify-end">
                 <ActionButton onClick={onToggleViewMode}>
                     <ViewModeIcon isCompact={isCompactMode} />
-                    {isCompactMode ? t('grid_view') : t('compact_view')}
+                    {isCompactMode ? "Grid View" : "Compact View"}
                 </ActionButton>
 
                 <ActionButton
@@ -75,7 +73,7 @@ export const StatusBar = ({
                             d="M4 6h16M4 10h16M4 14h16M4 18h16"
                         />
                     </svg>
-                    {areAllSelected ? t('deselect_all') : t('select_all')}
+                    {areAllSelected ? "Deselect All" : "Select All"}
                 </ActionButton>
 
                 {selectedCount > 0 && (
@@ -91,7 +89,7 @@ export const StatusBar = ({
                                 d="M6 18L18 6M6 6l12 12"
                             />
                         </svg>
-                        {t('clear_selection')}
+                        Clear Selection
                     </ActionButton>
                 )}
             </div>
