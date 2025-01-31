@@ -82,6 +82,10 @@ export const useAnimeSelections = () => {
         setUserSelection(prev => ({ ...prev, watchState }));
         setUserSelectionsByUsernames(prevSelections => {
 
+            if (prevSelections[usernamesKey] === undefined) {
+                return prevSelections;
+            }
+
             return {
                 ...prevSelections,
                 [usernamesKey]: {...prevSelections[usernamesKey], watchState},
