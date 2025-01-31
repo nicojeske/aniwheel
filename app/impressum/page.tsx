@@ -53,9 +53,33 @@ export default function Impressum() {
 
                 <section className="mb-8">
                     <h2 className="text-lg font-semibold text-gray-800 mb-4">Data Protection</h2>
-                    <p className="text-gray-700">
+                    <p className="text-gray-700 mb-4">
                         In general, no personal data are stored when visiting the AniWheel website. Data will not be shared with third parties without your consent. Please note that unsecured data transmission over the internet (e.g., via email) may be subject to unauthorized access by third parties.
                     </p>
+                    <p className={"text-gray-700 mb-4"}>
+                        We use Sentry, an error tracking and performance monitoring service, to improve the stability and performance of our website. Sentry may collect certain technical data about your browser, device, and interactions with our site in the event of an error or performance issue. This data is used solely for debugging and improving the user experience. No personally identifiable information is intentionally collected or stored by Sentry.
+                    </p>
+
+                    <p className="text-gray-700 mb-4">
+                        The data collected by Sentry may include:
+                    </p>
+                    <p className="text-gray-700 mb-4">
+                        <ul className="list-disc list-inside">
+                            <li>Browser type and version</li>
+                            <li>Operating system</li>
+                            <li>Device type</li>
+                            <li>Anonymized IP address</li>
+                            <li>Stack traces and error messages</li>
+                            <li>Performance metrics</li>
+                        </ul>
+                    </p>
+                    <p className="text-gray-700 mb-4">
+                        We have configured Sentry to respect user privacy and minimize data collection. All data sent to Sentry is encrypted in transit and stored securely. The information collected is used only for the purpose of identifying and resolving technical issues to enhance the overall quality of our service.
+                    </p>
+                    <p className="text-gray-700 mb-4">
+                        For more information about Sentry's privacy practices, please refer to the <a href="https://sentry.io/privacy/">Sentry Privacy Policy</a>.
+                    </p>
+
                 </section>
 
                 <footer className="text-gray-600 text-sm mb-6">
