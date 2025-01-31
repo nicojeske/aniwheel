@@ -89,7 +89,7 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({
                 {wheelLimit && selectedIds.length > wheelLimit && (
                     <AlertMessage
                         icon="close"
-                        message={`You have selected over ${wheelLimit} animes. For performance reasons the Wheel will select {limit} animes randomly from your selection.`}
+                        message={`You have selected over ${wheelLimit} anime. For performance reasons the Wheel will select ${wheelLimit} anime randomly from your selection.`}
                     />
                 )}
 
