@@ -1,8 +1,9 @@
 // hooks/useAnimeSelections.ts
-import { useState, useEffect } from 'react';
+import {useState, useEffect, Dispatch, SetStateAction} from 'react';
 import { useLocalStorage } from 'usehooks-ts';
 import { MediaListStatus } from '@/app/gql/graphql';
 import { UserSelection, defaultUserSelection, createEmptySelections } from '@/app/models/UserSelection';
+import useValidatedState from "@/app/hooks/useValidatedState";
 
 export const useAnimeSelections = () => {
     const [userSelectionsByUsernames, setUserSelectionsByUsernames] = useLocalStorage<{ [key: string]: UserSelection }>(
@@ -15,7 +16,13 @@ export const useAnimeSelections = () => {
         '',
         { initializeWithValue: true }
     );
-    const [userSelection, setUserSelection] = useState<UserSelection>(defaultUserSelection);
+
+    const [userSelection, setUserSelection] = useValidatedState(defaultUserSelection, (value) => {
+        return !(!value ||
+            !value.userNames ||
+            !value.selections ||
+            !value.watchState);
+    }, defaultUserSelection);
 
     const getUsernamesKey = (usernames: string[]) => {
         return usernames
@@ -86,6 +93,26 @@ export const useAnimeSelections = () => {
     useEffect(() => {
         if (lastUsernameKey) {
             const lastUserSelection = userSelectionsByUsernames[lastUsernameKey];
+
+            if (!lastUserSelection) return;
+
+            // Validate lastUserSelection
+            if (
+                !lastUserSelection ||
+                !lastUserSelection.userNames ||
+                !lastUserSelection.selections ||
+                !lastUserSelection.watchState
+            ) {
+                console.log(`Invalid lastUserSelection: ${JSON.stringify(lastUserSelection)} for key ${lastUsernameKey}, clearing...`);
+                // clear userselections by usernames
+                setUserSelectionsByUsernames(prev => {
+                    const updated = { ...prev };
+                    delete updated[lastUsernameKey];
+                    return updated;
+                });
+                return;
+            }
+
             console.log("lastUserSelection", lastUserSelection)
             if (lastUserSelection) {
                 setUserSelection(lastUserSelection);
