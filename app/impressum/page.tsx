@@ -77,7 +77,7 @@ export default function Impressum() {
                         We have configured Sentry to respect user privacy and minimize data collection. All data sent to Sentry is encrypted in transit and stored securely. The information collected is used only for the purpose of identifying and resolving technical issues to enhance the overall quality of our service.
                     </p>
                     <p className="text-gray-700 mb-4">
-                        For more information about Sentry's privacy practices, please refer to the <a href="https://sentry.io/privacy/">Sentry Privacy Policy</a>.
+                        For more information about Sentry&#39;s privacy practices, please refer to the <a href="https://sentry.io/privacy/">Sentry Privacy Policy</a>.
                     </p>
 
                 </section>
