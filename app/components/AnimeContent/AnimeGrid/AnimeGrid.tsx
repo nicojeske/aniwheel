@@ -5,10 +5,13 @@ import {useAnimeFilters} from "@/app/hooks/useAnimeFilter";
 import AnimeFilters from "@/app/components/AnimeContent/AnimeGrid/Filter/AnimeFilters";
 import AlertMessage from "@/app/components/AnimeContent/AnimeGrid/Alerts/AlertMessage";
 import AnimeList from "@/app/components/AnimeContent/AnimeGrid/AnimeList";
+import {MediaStatus} from "@/app/gql/graphql";
 
 type AnimeGridProps = MultipleSelectionModel<AnimeEntryModel> & {
     wheelLimit?: number
 }
+
+const notYetReleasedState = "NOT_YET_RELEASED";
 
 
 const AnimeGrid: React.FC<AnimeGridProps> = ({
@@ -49,6 +52,12 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({
         }
     };
 
+    // When only not yet released is not selected as status
+    const isDefaultFilterUnreleased =
+        filterStates.selectedStatus.length === uniqueOptions.statuses.length -1 &&
+        uniqueOptions.statuses.includes(MediaStatus.NotYetReleased) &&
+        !filterStates.selectedStatus.includes(notYetReleasedState);
+
     return (
         <div className="flex flex-grow flex-col gap-4">
             <div>
@@ -83,6 +92,15 @@ const AnimeGrid: React.FC<AnimeGridProps> = ({
                         message={`You have selected over ${wheelLimit} animes. For performance reasons the Wheel will select {limit} animes randomly from your selection.`}
                     />
                 )}
+
+                {
+                    isFiltering && isDefaultFilterUnreleased && (
+                        <AlertMessage
+                            icon="info"
+                            message="Unreleased anime are not shown by default. You can enable them in the advanced filters."
+                        />
+                    )
+                }
             </div>
 
             <AnimeList

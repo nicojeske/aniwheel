@@ -38,6 +38,8 @@ export type AnimeFilterResult = {
     selectedAnimesOutOfFiltered: number;
 }
 
+const notYetReleasedState = "NOT_YET_RELEASED";
+
 export const useAnimeFilters = (models: AnimeEntryModel[], selectedIds: number[]): AnimeFilterResult => {
     // Extract unique filter options
     const uniqueOptions = {
@@ -64,6 +66,16 @@ export const useAnimeFilters = (models: AnimeEntryModel[], selectedIds: number[]
     const [selectedStatus, setSelectedStatus] = useState<string[]>([]);
     const [selectedYears, setSelectedYears] = useState<number[]>([]);
     const [showSelectedOnly, setShowSelectedOnly] = useState(false);
+
+    // Enable all statuses except NOT_YET_RELEASED
+    const allStatuses = uniqueOptions.statuses.filter(status => status !== notYetReleasedState);
+    if (
+        selectedStatus.length === 0 &&
+        allStatuses.length > 0 &&
+        uniqueOptions.statuses.includes(MediaStatus.NotYetReleased)
+    ) {
+        setSelectedStatus(allStatuses);
+    }
 
     // Filtering logic
     const filterAnimes = (
